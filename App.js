@@ -1,20 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Dashboard from './src/Dashboard';
+import Setup from './src/Setup';
+import { NativeWindStyleSheet } from "nativewind";
 
-export default function App() {
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
+
+const Stack = createNativeStackNavigator();
+
+function App() {
+  const isSignedIn = true
+
+  
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <NavigationContainer >
+      <Stack.Navigator initialRouteName='setup' screenOptions={{ headerShown: false }}>
+        {isSignedIn ?
+          <Stack.Screen name='dashboard' component={Dashboard} />
+          :
+          <Stack.Screen name='setup' component={Setup} />
+        }
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+
+
+export default App;
