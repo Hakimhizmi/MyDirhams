@@ -1,30 +1,55 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from './src/Dashboard';
 import Setup from './src/Setup';
-import { NativeWindStyleSheet } from "nativewind";
+import { initDatabase, checkIfDatabaseExists } from './database';
+import { Image, View } from 'react-native';
 
-NativeWindStyleSheet.setOutput({
-  default: "native",
-});
 
 const Stack = createNativeStackNavigator();
 
 function App() {
-  const isSignedIn = true
+  const [loading, setLoading] = useState()
+  const [isSignedIn,setIsSignedIn] = useState(false)
 
-  
-  return (
-    <NavigationContainer >
-      <Stack.Navigator initialRouteName='setup' screenOptions={{ headerShown: false }}>
-        {isSignedIn ?
-          <Stack.Screen name='dashboard' component={Dashboard} />
-          :
-          <Stack.Screen name='setup' component={Setup} />
+  useEffect(() => {
+    const setupDatabase = async () => {
+      try {
+        setLoading(true)
+        // Check if the database exists
+        const databaseExists = await checkIfDatabaseExists();
+        if (databaseExists) {
+          setIsSignedIn(true)
+        }else{
+          //todo
         }
-      </Stack.Navigator>
-    </NavigationContainer>
+        console.log(databaseExists);
+      } catch (error) {
+        console.error('Error setting up database:', error);
+      } finally {
+        setLoading(false)
+      }
+    };
+
+    setupDatabase();
+  }, []);
+
+  return (
+    loading ?
+      <View className="h-screen flex items-center justify-center">
+        <Image source={require('./assets/gif/loader.gif')} className="w-64" />
+      </View>
+      :
+      <NavigationContainer >
+        <Stack.Navigator initialRouteName='setup' screenOptions={{ headerShown: false }}>
+          {isSignedIn ?
+            <Stack.Screen name='dashboard' component={Dashboard} />
+            :
+            <Stack.Screen name='setup' component={Setup} />
+          }
+        </Stack.Navigator>
+      </NavigationContainer>
   )
 }
 
