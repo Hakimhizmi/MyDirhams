@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from './src/Dashboard';
 import Setup from './src/Setup';
-import { initDatabase, checkIfDatabaseExists } from './database';
+import { initDatabase, checkIfDatabaseExists, getTable } from './database';
 import { Image, View } from 'react-native';
 
 
@@ -11,9 +11,10 @@ const Stack = createNativeStackNavigator();
 export const langContext = createContext()
 
 function App() {
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState(true)
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [lang, setLang] = useState('eng')
+
 
   useEffect(() => {
     const setupDatabase = async () => {
@@ -24,9 +25,8 @@ function App() {
         if (databaseExists) {
           setIsSignedIn(true)
         } else {
-          //todo
+          initDatabase()
         }
-        //console.log(databaseExists);
       } catch (error) {
         console.error('Error setting up database:', error);
       } finally {
@@ -40,15 +40,19 @@ function App() {
   function toogleLanguage() {
     setLang(lang === 'eng' ? 'ar' : 'eng')
   }
+
+  function redirectToDashboard() {
+    setIsSignedIn(true);
+  }
   return (
     loading ?
       <View className="h-screen flex items-center justify-center">
         <Image source={require('./assets/gif/loader.gif')} className="w-64" />
       </View>
       :
-      <langContext.Provider value={{ lang, toogleLanguage }}>
+      <langContext.Provider value={{ lang, toogleLanguage , redirectToDashboard }}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='setup' screenOptions={{ headerShown: false }}>
+          <Stack.Navigator initialRouteName={isSignedIn ? 'dashboard' : 'setup'} screenOptions={{ headerShown: false }}>
             {isSignedIn ?
               <Stack.Screen name='dashboard' component={Dashboard} />
               :

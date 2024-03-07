@@ -3,12 +3,29 @@ import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 're
 import SwitchSelector from "react-native-switch-selector";
 import Svg from '../../../assets/svg/setupac.png'
 import { langContext } from '../../../App'
+import { insertUser } from '../../../database';
 
 
 export default function Register() {
-  const { lang } = useContext(langContext)
-  const [currency, setCurrency] = useState('mad')
+  const { lang, redirectToDashboard } = useContext(langContext)
+  const [currency, setCurrency] = useState('usd')
+  const [username, setUserName] = useState()
+  const [balance, setBalance] = useState()
+  const [error, setError] = useState(false)
 
+  const save = async () => {
+    if (!username || !balance || !username.trim() || !balance.trim()) {
+      return setError(lang === 'eng' ? 'All fields are required.' : 'جميع الحقول مطلوبة.');
+    }
+    insertUser(username, balance, currency, lang)
+      .then(async (insertedId) => {
+        redirectToDashboard()
+        console.log(`User inserted with ID: ${insertedId}`);
+      })
+      .catch(error => {
+        console.error('Error inserting user:', error);
+      });
+  }
   return (
     <SafeAreaView>
       <View className="h-screen bg-gray-50 flex justify-center relative">
@@ -25,15 +42,15 @@ export default function Register() {
         <View className="mb-24 flex flex-col gap-6 px-5">
           <View className="px-5 pt-2 border border-gray-300/60 rounded-2xl">
             <Text className="text-sm text-gray-600 ml-1">{lang === 'eng' ? 'Username' : 'اسم المستخدم'}</Text>
-            <TextInput className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., JohnDoe123' placeholderTextColor="gray" />
+            <TextInput onChangeText={(text) => setUserName(text)} className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., JohnDoe123' placeholderTextColor="gray" />
           </View>
           <View className="px-5 pt-2 border border-gray-300/60 rounded-2xl">
             <Text className="text-sm text-gray-600 ml-1">{lang === 'eng' ? 'Balance' : 'رصيد'}</Text>
-            <TextInput keyboardType='number-pad' className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., 500.00' placeholderTextColor="gray" />
+            <TextInput onChangeText={(text) => setBalance(text)} keyboardType='number-pad' className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., 500.00' placeholderTextColor="gray" />
           </View>
           <View className="px-1">
             <SwitchSelector
-              initial={0} textColor="#dc2626" selectedColor="white" buttonColor="#dc2626" borderColor="#d1d5db" valuePadding={2.5} height={50}
+              initial={1} textColor="#dc2626" selectedColor="white" buttonColor="#dc2626" borderColor="#d1d5db" valuePadding={2.5} height={50}
               bold hasPadding backgroundColor="#f9fafb" borderRadius={20}
               options={[
                 { label: "MAD", value: "mad" },
@@ -45,6 +62,8 @@ export default function Register() {
 
             />
           </View>
+          {error && <Text className="text-sm text-center font-bold text-red-500">{error}</Text> }
+
         </View>
         <View className="flex px-8 flex-row justify-between items-center absolute bottom-16 w-full">
           <View className="flex flex-row gap-2">
@@ -53,7 +72,7 @@ export default function Register() {
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-red-600 rounded-full"></View>
           </View>
-          <TouchableOpacity className="bg-red-600 px-8 py-2 rounded-3xl">
+          <TouchableOpacity onPress={save} className="bg-red-600 px-8 py-2 rounded-3xl">
             <Text className="text-lg font-bold text-white">{lang === 'eng' ? 'Get Started' : 'ابدأ'}</Text>
           </TouchableOpacity>
         </View>
