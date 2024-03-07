@@ -267,5 +267,24 @@ export const getExpensesOrIncomes = async (table, date = null, category = null) 
   }
 };
 
+export const deleteExpensesOrIncomes = async (table, id) => {
+  const query = `DELETE FROM ${table} WHERE id = ?`;
 
+  try {
+    await new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          query,
+          [id],
+          (_, result) => resolve(result),
+          (_, error) => reject(error)
+        );
+      });
+    });
+
+    return { success: true };
+  } catch (error) {
+    throw error;
+  }
+};
 

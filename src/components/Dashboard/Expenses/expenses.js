@@ -1,16 +1,19 @@
 import React, { useCallback, useContext, useState } from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import ExpenceFilter from './components/expenceFilter'
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import { getExpensesOrIncomes } from '../../../../database';
+import { deleteExpensesOrIncomes, getExpensesOrIncomes } from '../../../../database';
 import { format, isValid } from 'date-fns';
 import { langContext } from '../../../../App'
 import { SimpleLineIcons } from '@expo/vector-icons';
-
+import Swipeable from 'react-native-swipeable';
+import { MaterialIcons } from '@expo/vector-icons';
+import ModalDelete from '../components/modalDelete';
 
 export default function Expenses({ navigation }) {
     const [toggleModalFilter, setToggleModalFilter] = useState(false)
+    const [toggleModalDelete, setToggleModalDelete] = useState(false)
     const [expences, setExpenses] = useState([])
     const [loading, setLoading] = useState(true)
     const { lang } = useContext(langContext)
@@ -20,8 +23,8 @@ export default function Expenses({ navigation }) {
 
     async function fetchData(d = null, c = null) {
         try {
-            const response = await getExpensesOrIncomes('expenses' ,d, c);
-            setExpenses(response.data);setCurrency(response.currency)
+            const response = await getExpensesOrIncomes('expenses', d, c);
+            setExpenses(response.data); setCurrency(response.currency)
             setLoading(false)
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -35,9 +38,19 @@ export default function Expenses({ navigation }) {
     );
 
     async function applyFilter() {
-        await fetchData(filterbyDate,filterByCategorie)
+        await fetchData(filterbyDate, filterByCategorie)
         setSelectedCategorie(null)
         setToggleModalFilter(false)
+    }
+
+    async function Delete() {
+        try {
+            await deleteExpensesOrIncomes('expenses', toggleModalDelete);
+            setToggleModalDelete(false)
+            fetchData()
+        } catch (error) {
+            console.error('Error deleting item', error);
+        }
     }
     return (
         loading ?
@@ -58,23 +71,31 @@ export default function Expenses({ navigation }) {
 
                 <View className="pt-8">
                     <Text className="text-black font-extrabold text-2xl">{lang === 'eng' ? 'Recent Expenses' : 'النفقات الأخيرة'}</Text>
-                    <Text className="mt-1 text-gray-600 text-lg">{lang === 'eng' ? 'Swipe to left to edit and right to delete' : 'اسحب إلى اليسار لتعديل وإلى اليمين لحذف'}</Text>
+                    <Text className="mt-1 text-gray-600 text-lg">{lang === 'eng' ? 'Swipe to the right to delete the expense.' : 'اسحب لليمين لحذف المصروف.'}</Text>
                     <View className="py-8 flex flex-col gap-4 justify-center">
                         {expences.length > 0 ?
                             expences.map((item, index) => (
-                                <View key={index} className="flex flex-row justify-between items-center">
-                                    <View className="flex flex-row gap-3">
-                                        <View className="bg-black/90 rounded-xl p-3">
-                                            <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
+                                <Swipeable key={index} rightButtons={
+                                    [
+                                        <TouchableHighlight onPress={() => setToggleModalDelete(item.id)} className="ml-2 bg-red-500 h-full flex justify-center px-5">
+                                            <MaterialIcons name="delete-outline" size={30} color="white" />
+                                        </TouchableHighlight>
+                                    ]
+                                }>
+                                    <View className="flex flex-row justify-between items-center">
+                                        <View className="flex flex-row gap-3">
+                                            <View className="bg-black/90 rounded-xl p-3">
+                                                <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
+                                            </View>
+                                            <View className="flex flex-col justify-center">
+                                                <Text className="text-lg font-bold text-gray-900 capitalize">{item?.title || 'xxxx'}</Text>
+                                                <Text className="text-sm -mt-1 text-gray-700">
+                                                    {isValid(new Date(item.date)) && format(new Date(item.date), 'dd MMM yyyy \'at\' HH:mm')}</Text>
+                                            </View>
                                         </View>
-                                        <View className="flex flex-col justify-center">
-                                            <Text className="text-lg font-bold text-gray-900 capitalize">{item?.title || 'xxxx'}</Text>
-                                            <Text className="text-sm -mt-1 text-gray-700">
-                                                {isValid(new Date(item.date)) && format(new Date(item.date), 'dd MMM yyyy \'at\' HH:mm')}</Text>
-                                        </View>
+                                        <Text className="text-xl font-bold text-gray-900 uppercase">{item?.amount || 'xxxx'} {currency}</Text>
                                     </View>
-                                    <Text className="text-xl font-bold text-gray-900 uppercase">{item?.amount || 'xxxx'} {currency}</Text>
-                                </View>
+                                </Swipeable>
                             )) :
                             <View className="py-44 flex items-center justify-center">
                                 <SimpleLineIcons name="doc" size={60} color="#959da6" />
@@ -85,7 +106,9 @@ export default function Expenses({ navigation }) {
                 </View>
 
                 <ExpenceFilter toggleModalFilter={toggleModalFilter} setToggleModalFilter={setToggleModalFilter} filterbyDate={filterbyDate} setDate={setDate}
-                filterByCategorie={filterByCategorie} setSelectedCategorie={setSelectedCategorie} applyFilter={applyFilter}/>
+                    filterByCategorie={filterByCategorie} setSelectedCategorie={setSelectedCategorie} applyFilter={applyFilter} />
+                <ModalDelete toggleModalDelete={toggleModalDelete} setToggleModalDelete={setToggleModalDelete} Delete={Delete} />
+
             </ScrollView>
     )
 }
