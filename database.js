@@ -134,8 +134,6 @@ const updateBalance = (changeAmount) => {
         [changeAmount],
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) {
-            console.log(rowsAffected);
-            console.log(changeAmount);
             resolve();
           } else {
             reject(new Error("Failed to update user's balance"));
