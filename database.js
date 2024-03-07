@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('mydirhamsDB.db');
@@ -108,7 +109,6 @@ export const getUserData = () => {
           [],
           (_, { rows }) => {
             if (rows.length > 0) {
-              console.log(rows);
               resolve(rows.item(0));
             } else {
               reject(new Error('No user found'));
@@ -198,7 +198,7 @@ export const insertIncome = (source, amount) => {
 };
 
 export const getTodayData = () => {
-  const todayDate = new Date().toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+  const todayDate = format(new Date(), 'yyyy-MM-dd');
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -238,24 +238,35 @@ export const getTodayData = () => {
   });
 };
 
-export const getExpenses = () => {
-  const query = `SELECT * FROM expenses ORDER BY date DESC`;
 
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        query,
-        [],
-        (_, { rows }) => {
-          const Expenses = rows._array;
-          resolve(Expenses);
-        },
-        (_, error) => {
-          reject(error);
-        }
-      );
+export const getExpensesOrIncomes = async (table, date = null, category = null) => {
+  date = date ? format(date,'yyyy-MM-dd') : null
+  const whereClause = date ? 'WHERE substr(date, 1, 10) = ?' : '';
+  console.log(category);
+  const categoryFilter = category ? `AND ${table === 'expenses' ? 'category' : 'source'} = ?` : '';
+
+  const query = `SELECT * FROM ${table} ${whereClause} ${categoryFilter} ORDER BY date DESC`;
+  const params = [date, category].filter(param => param !== null && param !== undefined);
+
+  try {
+    const { rows } = await new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          query,
+          params,
+          (_, result) => resolve(result),
+          (_, error) => reject(error)
+        );
+      });
     });
-  });
+
+    const data = rows._array;
+    const { currency } = await getUserData();
+    return { data, currency };
+  } catch (error) {
+    throw error;
+  }
 };
+
 
 

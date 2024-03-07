@@ -44,7 +44,7 @@ export default function Home() {
       <ScrollView className="h-screen">
         <ImageBackground source={require('../../../../assets/images/gradienta.jpg')} className="bg-red-100 object-cover">
           <View className="px-4 pt-10 flex flex-row justify-between">
-            <Text className="text-meduim text-lg text-gray-900">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
+            <Text className="text-meduim text-lg text-gray-900 capitalize">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
           </View>
           <View className="py-16 flex flex-col gap-3 items-center justify-center">
             <Text className="text-xl font-bold text-gray-800">{lang === 'eng' ? 'Availiable balance' : 'الرصيد المتاح'}</Text>

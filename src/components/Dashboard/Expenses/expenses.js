@@ -3,9 +3,10 @@ import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import ExpenceFilter from './components/expenceFilter'
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
-import { getExpenses } from '../../../../database';
+import { getExpensesOrIncomes } from '../../../../database';
 import { format, isValid } from 'date-fns';
-import {langContext} from '../../../../App'
+import { langContext } from '../../../../App'
+import { SimpleLineIcons } from '@expo/vector-icons';
 
 
 export default function Expenses({ navigation }) {
@@ -13,21 +14,30 @@ export default function Expenses({ navigation }) {
     const [expences, setExpenses] = useState([])
     const [loading, setLoading] = useState(true)
     const { lang } = useContext(langContext)
+    const [currency, setCurrency] = useState()
+    const [filterbyDate, setDate] = useState(null);
+    const [filterByCategorie, setSelectedCategorie] = useState(null)
+
+    async function fetchData(d = null, c = null) {
+        try {
+            const response = await getExpensesOrIncomes('expenses');
+            setExpenses(response.data);setCurrency(response.currency)
+            setLoading(false)
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    }
 
     useFocusEffect(
         useCallback(() => {
-            async function fetchData() {
-                try {
-                    const Expenses = await getExpenses();
-                    setExpenses(Expenses)
-                    setLoading(false)
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                }
-            }
             fetchData();
         }, [])
     );
+
+    async function applyFilter() {
+        await fetchData(filterbyDate,filterByCategorie)
+        setToggleModalFilter(false)
+    }
     return (
         loading ?
             <View className="h-screen bg-white flex items-center justify-center">
@@ -57,20 +67,24 @@ export default function Expenses({ navigation }) {
                                             <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
                                         </View>
                                         <View className="flex flex-col justify-center">
-                                            <Text className="text-lg font-bold text-gray-900">{item?.title || 'xxxx'}</Text>
+                                            <Text className="text-lg font-bold text-gray-900 capitalize">{item?.title || 'xxxx'}</Text>
                                             <Text className="text-sm -mt-1 text-gray-700">
-                                            {isValid(new Date(item.date)) && format(new Date(item.date), 'dd MMM yyyy \'at\' HH:mm')}</Text>
+                                                {isValid(new Date(item.date)) && format(new Date(item.date), 'dd MMM yyyy \'at\' HH:mm')}</Text>
                                         </View>
                                     </View>
-                                    <Text className="text-xl font-bold text-gray-900">${item?.amount || 'xxxx'}</Text>
+                                    <Text className="text-xl font-bold text-gray-900 uppercase">{item?.amount || 'xxxx'} {currency}</Text>
                                 </View>
                             )) :
-                            ""
+                            <View className="py-44 flex items-center justify-center">
+                                <SimpleLineIcons name="doc" size={60} color="#959da6" />
+                                <Text className="mt-2 text-gray-400/80 font-light text-xl">{lang === 'eng' ? 'No expenses are available.' : 'لا توجد نفقات حاليًّا.'}</Text>
+                            </View>
                         }
                     </View>
                 </View>
 
-                <ExpenceFilter toggleModalFilter={toggleModalFilter} setToggleModalFilter={setToggleModalFilter} />
+                <ExpenceFilter toggleModalFilter={toggleModalFilter} setToggleModalFilter={setToggleModalFilter} filterbyDate={filterbyDate} setDate={setDate}
+                filterByCategorie={filterByCategorie} setSelectedCategorie={setSelectedCategorie} applyFilter={applyFilter}/>
             </ScrollView>
     )
 }
