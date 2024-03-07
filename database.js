@@ -242,8 +242,7 @@ export const getTodayData = () => {
 export const getExpensesOrIncomes = async (table, date = null, category = null) => {
   date = date ? format(date,'yyyy-MM-dd') : null
   const whereClause = date ? 'WHERE substr(date, 1, 10) = ?' : '';
-  console.log(category);
-  const categoryFilter = category ? `AND ${table === 'expenses' ? 'category' : 'source'} = ?` : '';
+  const categoryFilter = category ? `${date ? 'AND' : 'WHERE'}  ${table === 'expenses' ? 'category' : 'source'} = ?` : '';
 
   const query = `SELECT * FROM ${table} ${whereClause} ${categoryFilter} ORDER BY date DESC`;
   const params = [date, category].filter(param => param !== null && param !== undefined);

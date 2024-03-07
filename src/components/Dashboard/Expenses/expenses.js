@@ -20,7 +20,7 @@ export default function Expenses({ navigation }) {
 
     async function fetchData(d = null, c = null) {
         try {
-            const response = await getExpensesOrIncomes('expenses');
+            const response = await getExpensesOrIncomes('expenses' ,d, c);
             setExpenses(response.data);setCurrency(response.currency)
             setLoading(false)
         } catch (error) {
@@ -36,6 +36,7 @@ export default function Expenses({ navigation }) {
 
     async function applyFilter() {
         await fetchData(filterbyDate,filterByCategorie)
+        setSelectedCategorie(null)
         setToggleModalFilter(false)
     }
     return (

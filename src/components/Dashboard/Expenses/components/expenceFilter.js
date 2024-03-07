@@ -67,7 +67,6 @@ export default function ExpenceFilter({ toggleModalFilter, setToggleModalFilter,
                     <SelectList
                         setSelected={(val) => setSelectedCategorie(val)}
                         data={data}
-                        value={filterByCategorie}
                         save="value"
                         boxStyles={{ backgroundColor: "white", borderColor: "#d1d5db", height: '11px' }}
                         dropdownStyles={{ backgroundColor: "white", borderColor: "#d1d5db" }}
