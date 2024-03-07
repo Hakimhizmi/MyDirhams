@@ -77,13 +77,13 @@ export default function Incomes({ navigation }) {
                     <View className="py-8 flex flex-col gap-4 justify-center">
                         {incomes.length > 0 ?
                             incomes.map((income, index) => (
-                                <Swipeable key={index} rightButtons={
-                                    [
-                                        <TouchableHighlight onPress={() => setToggleModalDelete(income.id)} className="ml-2 bg-red-500 h-full flex justify-center px-5">
+                                <Swipeable key={index} rightContent={
+                                    (
+                                        <TouchableHighlight className="ml-2 h-14 bg-red-500 flex justify-center px-10">
                                             <MaterialIcons name="delete-outline" size={30} color="white" />
                                         </TouchableHighlight>
-                                    ]
-                                }>
+                                    )
+                                } onRightActionRelease={() => setToggleModalDelete(income.id)}>
                                     <View className="flex flex-row justify-between items-center" >
                                         <View className="flex flex-col justify-center">
                                             <Text className="text-lg font-bold text-gray-900 capitalize">{income?.source || 'xxxx'}</Text>

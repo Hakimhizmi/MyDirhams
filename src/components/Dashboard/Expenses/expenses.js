@@ -20,7 +20,8 @@ export default function Expenses({ navigation }) {
     const [currency, setCurrency] = useState()
     const [filterbyDate, setDate] = useState(null);
     const [filterByCategorie, setSelectedCategorie] = useState(null)
-
+    
+    
     async function fetchData(d = null, c = null) {
         try {
             const response = await getExpensesOrIncomes('expenses', d, c);
@@ -75,13 +76,11 @@ export default function Expenses({ navigation }) {
                     <View className="py-8 flex flex-col gap-4 justify-center">
                         {expences.length > 0 ?
                             expences.map((item, index) => (
-                                <Swipeable key={index} rightButtons={
-                                    [
-                                        <TouchableHighlight onPress={() => setToggleModalDelete(item.id)} className="ml-2 bg-red-500 h-full flex justify-center px-5">
-                                            <MaterialIcons name="delete-outline" size={30} color="white" />
-                                        </TouchableHighlight>
-                                    ]
-                                }>
+                                <Swipeable key={index} rightContent={
+                                        (<TouchableHighlight className="ml-2 h-14 bg-red-500 flex justify-center px-10">
+                                            <MaterialIcons name="delete-outline" size={30} color="white"  />
+                                        </TouchableHighlight>) 
+                                } onRightActionRelease={() => setToggleModalDelete(item.id)} >
                                     <View className="flex flex-row justify-between items-center">
                                         <View className="flex flex-row gap-3">
                                             <View className="bg-black/90 rounded-xl p-3">
