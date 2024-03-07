@@ -1,29 +1,34 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Image, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import SwitchSelector from "react-native-switch-selector";
 import Svg from '../../../assets/svg/setupac.png'
+import { langContext } from '../../../App'
+
 
 export default function Register() {
+  const { lang } = useContext(langContext)
   const [currency, setCurrency] = useState('mad')
 
   return (
     <SafeAreaView>
       <View className="h-screen bg-gray-50 flex justify-center relative">
-        <View  className='mb-16 px-5 flex gap-4 justify-center'>
+        <View className={`mb-16 px-5 flex gap-4 justify-center ${lang === 'ar' && ' items-center'}`}>
           <Image source={Svg} alt='logo' className="w-16 h-16" />
-          <Text className="mt-3 text-4xl text-gray-900 font-semibold" >Set up your MD account</Text>
+          <Text className="mt-3 text-4xl text-gray-900 font-semibold" >{lang === 'eng' ? ' Set up your MD account' : 'أنشئ حسابك في MD.'}</Text>
           <View className="bg-red-600 px-5 py-4 rounded-b-3xl rounded-tr-3xl">
-            <Text className="text-white text-sm">Establish your account effortlessly with no charges involved, and experience the convenience of an entirely
-              offline setup on your personal device.</Text>
+            <Text className="text-white text-sm">
+              {lang === 'eng' ?
+                `Establish your account effortlessly with no charges involved, and experience the convenience of an entirely offline setup on your personal device.`
+                : `أنشئ حسابك بسهولة وبدون رسوم، واستمتع براحة الإعداد كليًا دون الحاجة للاتصال بالإنترنت على جهازك الشخصي.`}</Text>
           </View>
         </View>
         <View className="mb-24 flex flex-col gap-6 px-5">
           <View className="px-5 pt-2 border border-gray-300/60 rounded-2xl">
-            <Text className="text-sm text-gray-600 ml-1">Username</Text>
+            <Text className="text-sm text-gray-600 ml-1">{lang === 'eng' ? 'Username' : 'اسم المستخدم'}</Text>
             <TextInput className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., JohnDoe123' placeholderTextColor="gray" />
           </View>
           <View className="px-5 pt-2 border border-gray-300/60 rounded-2xl">
-            <Text className="text-sm text-gray-600 ml-1">Amount</Text>
+            <Text className="text-sm text-gray-600 ml-1">{lang === 'eng' ? 'Balance' : 'رصيد'}</Text>
             <TextInput keyboardType='number-pad' className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., 500.00' placeholderTextColor="gray" />
           </View>
           <View className="px-1">
@@ -45,10 +50,11 @@ export default function Register() {
           <View className="flex flex-row gap-2">
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
+            <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-red-600 rounded-full"></View>
           </View>
           <TouchableOpacity className="bg-red-600 px-8 py-2 rounded-3xl">
-            <Text className="text-lg font-bold text-white">Get Started</Text>
+            <Text className="text-lg font-bold text-white">{lang === 'eng' ? 'Get Started' : 'ابدأ'}</Text>
           </TouchableOpacity>
         </View>
       </View>
