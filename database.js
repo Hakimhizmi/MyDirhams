@@ -240,7 +240,7 @@ export const getTodayData = () => {
 
 
 export const getExpensesOrIncomes = async (table, date = null, category = null) => {
-  date = date ? format(date,'yyyy-MM-dd') : null
+  date = date ? format(date, 'yyyy-MM-dd') : null
   const whereClause = date ? 'WHERE substr(date, 1, 10) = ?' : '';
   const categoryFilter = category ? `${date ? 'AND' : 'WHERE'}  ${table === 'expenses' ? 'category' : 'source'} = ?` : '';
 
@@ -268,9 +268,29 @@ export const getExpensesOrIncomes = async (table, date = null, category = null) 
 };
 
 export const deleteExpensesOrIncomes = async (table, id) => {
-  const query = `DELETE FROM ${table} WHERE id = ?`;
+  let query = `SELECT amount FROM ${table} WHERE id = ?`;
 
   try {
+    const { rows } = await new Promise((resolve, reject) => {
+      db.transaction(tx => {
+        tx.executeSql(
+          query,
+          [id],
+          (_, result) => resolve(result),
+          (_, error) => reject(error)
+        );
+      });
+    });
+
+    if (rows.length === 0) {
+      throw new Error(`Item with id ${id} not found.`);
+    }
+
+    const deletedItem = rows.item(0);
+    const amount = deletedItem.amount;
+
+    query = `DELETE FROM ${table} WHERE id = ?`;
+
     await new Promise((resolve, reject) => {
       db.transaction(tx => {
         tx.executeSql(
@@ -282,9 +302,16 @@ export const deleteExpensesOrIncomes = async (table, id) => {
       });
     });
 
+    if (table === 'expenses') {
+      await updateBalance(amount);
+    } else if (table === 'income') {
+      await updateBalance(-amount);
+    }
+
     return { success: true };
   } catch (error) {
     throw error;
   }
 };
+
 
