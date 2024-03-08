@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import { langContext } from '../../../../App'
 import { Feather } from '@expo/vector-icons';
 
-export default function ModalDelete({ toggleModalDelete, setToggleModalDelete, Delete }) {
+export default function ModalDelete({ toggleModalDelete, setToggleModalDelete, Delete, loadingBtn }) {
     const { lang } = useContext(langContext)
 
     return (
@@ -34,8 +34,10 @@ export default function ModalDelete({ toggleModalDelete, setToggleModalDelete, D
                     <Text className="mt-2 text-gray-500 font-bold text-lg text-center">{lang === 'eng' ? 'This action cannot be undone. All values associated with this field will be lost.' :
                         'لا يمكن التراجع عن هذا الإجراء. ستفقد جميع القيم المرتبطة بهذا الحقل.'}</Text>
 
-                    <TouchableOpacity onPress={() => Delete()} className="mt-7 w-full bg-red-600 py-3 flex items-center rounded-lg">
-                        <Text className="text-white font-semibold text-lg">{lang === 'eng' ? 'Delete Field' : 'حذف الحقل'}</Text>
+                    <TouchableOpacity onPress={() => { !loadingBtn && Delete() }} className="mt-7 w-full bg-red-600 py-3 flex items-center rounded-lg">
+                        <Text className="text-white font-semibold text-lg">
+                            {loadingBtn ? lang === 'eng' ? 'Loading....' : 'جار التحميل....'
+                                : lang === 'eng' ? 'Delete Field' : 'حذف الحقل'}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setToggleModalDelete(false)} className="mt-4 w-full border border-gray-400 py-3 flex items-center rounded-lg">
                         <Text className="text-gray-700 font-semibold text-lg">{lang === 'eng' ? 'Cancel' : 'إلغاء'}</Text>

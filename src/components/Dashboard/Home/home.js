@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import deposit from '../../../../assets/svg/deposit.png'
 import withdraw from '../../../../assets/svg/withdraw.png'
 import savemoney from '../../../../assets/svg/savemoney.png'
@@ -15,25 +15,87 @@ export default function Home() {
   const [toggleModalDeposit, setToggleModalDeposit] = useState(false)
   const [toggleModalWithdraw, setToggleModalWithdraw] = useState(false)
   const [userData, setUserData] = useState({})
-  const [todayExpenses, setTodayExpenses] = useState([])
+  const [todayExpensesIncomes, setTodayData] = useState([])
   const [loading, setLoading] = useState(true)
   const { lang } = useContext(langContext)
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [ischange, setIschange] = useState();
+
+  async function fetchTodayData(p = 1) {
+    try {
+      setIsLoading(true);
+      const data = await getTodayData(p);
+      if (data.length > 0) {
+        setTodayData(prevData => [...prevData, ...data]);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    } finally {
+      setLoading(false);
+      setIsLoading(false);
+    }
+  }
+
+  function reset() {
+    setLoading(true)
+    setTodayData([]); setPage(1); setHasMore(true);
+  }
 
   useFocusEffect(
     useCallback(() => {
       async function fetchData() {
         try {
+          reset()
           const userData = await getUserData();
-          const Expenses = await getTodayData();
-          setUserData(userData); setTodayExpenses(Expenses)
-          setLoading(false)
+          setUserData(userData);
+          await fetchTodayData()
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
       }
       fetchData();
-    }, [toggleModalDeposit, toggleModalWithdraw])
+    }, [ischange])
   );
+
+  function handleLoadMoreData() {
+    if (!isLoading && hasMore) {
+      setPage(prevPage => prevPage + 1);
+      fetchTodayData(page + 1);
+    }
+  }
+
+  const renderItem = ({ item, index }) => (
+    <View key={index} className="flex mt-3 flex-row justify-between items-center">
+      <View className="flex flex-row gap-3">
+        <View className="bg-black/90 rounded-xl p-3">
+          <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
+        </View>
+        <View className="flex flex-col justify-center">
+          <Text className="text-lg font-bold text-gray-900 max-w-[24vh]" numberOfLines={1} ellipsizeMode="tail">{item?.title || 'xxxx'}</Text>
+          <Text className="text-sm -mt-1 text-gray-700">
+            {isValid(new Date(item.date)) && format(new Date(item.date), `'${lang === 'eng' ? 'Today at' : 'اليوم في'}' HH:mm`)}</Text>
+        </View>
+      </View>
+      <Text className={`text-xl font-bold ${item.type === 'expense' ? 'text-red-500' : ' text-green-500'}`}>
+        {item.type === 'expense' ? '-' : '+'}{item?.amount || 'xxxx'} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
+    </View>
+  );
+
+  const renderFooter = () => {
+    if (isLoading) {
+      return (
+        <View className="flex items-center justify-center py-2">
+          <ActivityIndicator size="small" color="#999" />
+        </View>
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     loading ?
@@ -48,7 +110,7 @@ export default function Home() {
           </View>
           <View className="py-16 flex flex-col gap-3 items-center justify-center">
             <Text className="text-xl font-bold text-gray-800">{lang === 'eng' ? 'Availiable balance' : 'الرصيد المتاح'}</Text>
-            <Text className="text-6xl font-black text-black">{userData?.balance || '........'} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
+            <Text className="text-6xl font-black text-black text-center">{userData?.balance || '........'} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
           </View>
 
           <View className="bg-white rounded-[70px] h-full px-7 pt-7">
@@ -75,25 +137,16 @@ export default function Home() {
             </View>
             <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Today' : 'اليوم'}</Text>
 
-            <View className="py-4 flex flex-col gap-4 min-h-[34vh]">
-              {todayExpenses.length > 0 ?
-                todayExpenses.map((item, index) => (
-                  <View key={index} className="flex flex-row justify-between items-center">
-                    <View className="flex flex-row gap-3">
-                      <View className="bg-black/90 rounded-xl p-3">
-                        <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
-                      </View>
-                      <View className="flex flex-col justify-center">
-                        <Text className="text-lg font-bold text-gray-900">{item?.title || 'xxxx'}</Text>
-                        <Text className="text-sm -mt-1 text-gray-700">
-                          {isValid(new Date(item.date)) && format(new Date(item.date), `'${lang === 'eng' ? 'Today at' : 'اليوم في'}' HH:mm`)}</Text>
-                      </View>
-                    </View>
-                    <Text className={`text-xl font-bold ${item.type === 'expense' ? 'text-red-500' : ' text-green-500'}`}>
-                      {item.type === 'expense' ? '-' : '+'}{item?.amount || 'xxxx'} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
-
-                  </View>
-                ))
+            <View className="pb-4 pt-1 flex flex-col min-h-[34vh]">
+              {todayExpensesIncomes.length > 0 ?
+                <FlatList
+                  data={todayExpensesIncomes}
+                  renderItem={renderItem}
+                  keyExtractor={(_, index) => index.toString()}
+                  onEndReached={handleLoadMoreData}
+                  onEndReachedThreshold={0.1}
+                  ListFooterComponent={renderFooter}
+                />
                 :
                 <View className="py-16 flex items-center justify-center">
                   <SimpleLineIcons name="doc" size={60} color="#959da6" />
@@ -104,8 +157,8 @@ export default function Home() {
           </View>
         </ImageBackground>
 
-        <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} />
-        <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} />
+        <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange}/>
+        <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange}/>
 
       </ScrollView>
   )

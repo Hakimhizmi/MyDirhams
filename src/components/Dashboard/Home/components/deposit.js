@@ -7,7 +7,7 @@ import { langContext } from '../../../../../App'
 const IncomeCategories = ['Salary', 'Bonuses', 'Commissions', 'Dividends', 'Interest Income', 'Rental Income',
   'Investment Income', 'Royalties', 'Pension or Retirement Income', 'Gifts and Inheritances', 'Others']
 
-export default function Deposit({ toggleModalDeposit, setToggleModalDeposit }) {
+export default function Deposit({ toggleModalDeposit, setToggleModalDeposit,setIschange }) {
   const [source, setSource] = useState()
   const [amount, setAmount] = useState()
   const { lang } = useContext(langContext)
@@ -20,6 +20,7 @@ export default function Deposit({ toggleModalDeposit, setToggleModalDeposit }) {
       }
       await insertIncome(source, amount );
       setError(""); setToggleModalDeposit(false)
+      setIschange(amount)
     } catch (error) {
       console.log(error);
       setError(lang === 'eng' ? 'something wrong, please try late..' : 'هناك خطأ ما، يرجى المحاولة لاحقًا..');

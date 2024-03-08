@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react'
-import { Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import ExpenceFilter from './components/expenceFilter'
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -20,39 +20,103 @@ export default function Expenses({ navigation }) {
     const [currency, setCurrency] = useState()
     const [filterbyDate, setDate] = useState(null);
     const [filterByCategorie, setSelectedCategorie] = useState(null)
-    
-    
-    async function fetchData(d = null, c = null) {
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [loadingBtn, setLoadingBtn] = useState(false)
+
+    async function fetchData(d = null, c = null, p = 1) {
         try {
-            const response = await getExpensesOrIncomes('expenses', d, c);
-            setExpenses(response.data); setCurrency(response.currency)
-            setLoading(false)
+            setIsLoading(true);
+            const { data, currency } = await getExpensesOrIncomes('expenses', d, c, p);
+            if (data.length > 0) {
+                setExpenses(prevData => [...prevData, ...data]);
+            } else {
+                setHasMore(false);
+            }
+            setCurrency(currency)
         } catch (error) {
             console.error('Error fetching user data:', error);
+        } finally {
+            setLoading(false);
+            setIsLoading(false);
         }
+    }
+
+    function reset() {
+        setExpenses([]); setPage(1); setHasMore(true);
     }
 
     useFocusEffect(
         useCallback(() => {
+            reset()
+            setLoading(true);
             fetchData();
         }, [])
     );
 
+    function handleLoadMoreData() {
+        if (!isLoading && hasMore) {
+            setPage(prevPage => prevPage + 1);
+            fetchData(filterbyDate, filterByCategorie, page + 1);
+        }
+    }
+    
     async function applyFilter() {
-        await fetchData(filterbyDate, filterByCategorie)
-        setSelectedCategorie(null)
-        setToggleModalFilter(false)
+        setLoadingBtn(true)
+        reset()
+        await fetchData(filterbyDate, filterByCategorie);
+        setToggleModalFilter(false);
+        setLoadingBtn(false)
     }
 
     async function Delete() {
         try {
+            setLoadingBtn(true)
             await deleteExpensesOrIncomes('expenses', toggleModalDelete);
             setToggleModalDelete(false)
+            reset()
             fetchData()
         } catch (error) {
             console.error('Error deleting item', error);
+        } finally {
+            setLoadingBtn(false)
         }
     }
+
+    const renderItem = ({ item, index }) => (
+        <Swipeable key={index} rightContent={
+            (<TouchableHighlight className="ml-2 h-14 bg-red-500 flex justify-center px-10">
+                <MaterialIcons name="delete-outline" size={30} color="white" />
+            </TouchableHighlight>)
+        } onRightActionRelease={() => setToggleModalDelete(item.id)} >
+            <View className="flex flex-row justify-between items-center">
+                <View className="flex flex-row gap-3">
+                    <View className="bg-black/90 rounded-xl p-3">
+                        <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
+                    </View>
+                    <View className="flex flex-col justify-center">
+                        <Text className="text-lg font-bold text-gray-900 capitalize">{item?.title || 'xxxx'}</Text>
+                        <Text className="text-sm -mt-1 text-gray-700">
+                            {isValid(new Date(item.date)) && format(new Date(item.date), 'dd MMM yyyy \'at\' HH:mm')}</Text>
+                    </View>
+                </View>
+                <Text className="text-xl font-bold text-gray-900 uppercase">{item?.amount || 'xxxx'} {currency}</Text>
+            </View>
+        </Swipeable>
+    );
+
+    const renderFooter = () => {
+        if (isLoading) {
+            return (
+                <View className="flex items-center justify-center py-2">
+                    <ActivityIndicator size="small" color="#999" />
+                </View>
+            );
+        } else {
+            return null;
+        }
+    };
     return (
         loading ?
             <View className="h-screen bg-white flex items-center justify-center">
@@ -75,27 +139,15 @@ export default function Expenses({ navigation }) {
                     <Text className="mt-1 text-gray-600 text-lg">{lang === 'eng' ? 'Swipe to the right to delete the expense.' : 'اسحب لليمين لحذف المصروف.'}</Text>
                     <View className="py-8 flex flex-col gap-4 justify-center">
                         {expences.length > 0 ?
-                            expences.map((item, index) => (
-                                <Swipeable key={index} rightContent={
-                                        (<TouchableHighlight className="ml-2 h-14 bg-red-500 flex justify-center px-10">
-                                            <MaterialIcons name="delete-outline" size={30} color="white"  />
-                                        </TouchableHighlight>) 
-                                } onRightActionRelease={() => setToggleModalDelete(item.id)} >
-                                    <View className="flex flex-row justify-between items-center">
-                                        <View className="flex flex-row gap-3">
-                                            <View className="bg-black/90 rounded-xl p-3">
-                                                <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
-                                            </View>
-                                            <View className="flex flex-col justify-center">
-                                                <Text className="text-lg font-bold text-gray-900 capitalize">{item?.title || 'xxxx'}</Text>
-                                                <Text className="text-sm -mt-1 text-gray-700">
-                                                    {isValid(new Date(item.date)) && format(new Date(item.date), 'dd MMM yyyy \'at\' HH:mm')}</Text>
-                                            </View>
-                                        </View>
-                                        <Text className="text-xl font-bold text-gray-900 uppercase">{item?.amount || 'xxxx'} {currency}</Text>
-                                    </View>
-                                </Swipeable>
-                            )) :
+                            <FlatList
+                                data={expences}
+                                renderItem={renderItem}
+                                keyExtractor={(_, index) => index.toString()}
+                                onEndReached={handleLoadMoreData}
+                                onEndReachedThreshold={0.1}
+                                ListFooterComponent={renderFooter}
+                            />
+                            :
                             <View className="py-44 flex items-center justify-center">
                                 <SimpleLineIcons name="doc" size={60} color="#959da6" />
                                 <Text className="mt-2 text-gray-400/80 font-light text-xl">{lang === 'eng' ? 'No expenses are available.' : 'لا توجد نفقات حاليًّا.'}</Text>

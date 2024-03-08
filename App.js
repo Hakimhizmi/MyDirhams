@@ -4,11 +4,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from './src/Dashboard';
 import Setup from './src/Setup';
 import { initDatabase, checkIfDatabaseExists, getTable } from './database';
-import { Image, View } from 'react-native';
+import { Image, LogBox, View } from 'react-native';
 
 
 const Stack = createNativeStackNavigator();
 export const langContext = createContext()
+LogBox.ignoreAllLogs();
 
 function App() {
   const [loading, setLoading] = useState(true)

@@ -5,7 +5,7 @@ import DateTimePicker from 'react-native-ui-datepicker';
 import { langContext } from '../../../../../App'
 import { format } from 'date-fns';
 
-export default function IncomeFilter({ toggleModalFilter, setToggleModalFilter, filterbyDate, setDate, filterByCategorie, setSelectedCategorie, applyFilter }) {
+export default function IncomeFilter({ toggleModalFilter, setToggleModalFilter, filterbyDate, setDate, filterByCategorie, setSelectedCategorie, applyFilter, loadingBtn }) {
     const { lang } = useContext(langContext)
 
 
@@ -62,7 +62,10 @@ export default function IncomeFilter({ toggleModalFilter, setToggleModalFilter, 
                         />
                     </View>
                     <TouchableOpacity className="mt-6 bg-red-600 py-2 rounded-2xl">
-                        <Text onPress={() => applyFilter()} className="font-bold text-center text-white text-lg">{lang === 'eng' ? 'Apply' : 'تطبيق التغييرات'}</Text>
+                        <Text onPress={() => { !loadingBtn && applyFilter() }} className="font-bold text-center text-white text-lg">
+                            {loadingBtn ? lang === 'eng' ? 'Loading....' : 'جار التحميل....'
+                            : lang === 'eng' ? 'Apply' : 'تطبيق التغييرات'}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>

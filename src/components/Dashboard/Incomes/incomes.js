@@ -1,5 +1,5 @@
-import React, { useCallback, useContext, useState } from 'react'
-import { Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
 import IncomeFilter from './components/incomeFilter'
 import { Ionicons, Entypo } from '@expo/vector-icons';
 import { langContext } from '../../../../App'
@@ -22,37 +22,108 @@ export default function Incomes({ navigation }) {
     const { lang } = useContext(langContext)
     const [filterbyDate, setDate] = useState(null);
     const [filterByCategorie, setSelectedCategorie] = useState(null)
+    const [page, setPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [loadingBtn, setLoadingBtn] = useState(false)
 
-    async function fetchData(d = null, c = null) {
+    async function fetchData(d = null, c = null, p = 1) {
         try {
-            const response = await getExpensesOrIncomes('income', d, c);
-            setIncomes(response.data); setCurrency(response.currency)
-            setLoading(false)
+            setIsLoading(true);
+            const { data, currency } = await getExpensesOrIncomes('income', d, c, p);
+            if (data.length) {
+                setIncomes(prevData => [...prevData, ...data]);
+            } else {
+                setHasMore(false);
+            }
+            setCurrency(currency);
         } catch (error) {
             console.error('Error fetching user data:', error);
+        } finally {
+            setLoading(false);
+            setIsLoading(false);
         }
+    }
+
+    function handleLoadMoreData() {
+        if (!isLoading && hasMore) {
+            setPage(prevPage => prevPage + 1);
+            fetchData(filterbyDate, filterByCategorie, page + 1);
+        }
+    }
+
+    function reset() {
+        setIncomes([]); setPage(1); setHasMore(true);
     }
 
     useFocusEffect(
         useCallback(() => {
+            reset()
+            setLoading(true);
             fetchData();
         }, [])
     );
 
     async function applyFilter() {
-        await fetchData(filterbyDate, filterByCategorie)
-        setToggleModalFilter(false)
+        setLoadingBtn(true)
+        reset()
+        await fetchData(filterbyDate, filterByCategorie);
+        setToggleModalFilter(false);
+        setLoadingBtn(false)
     }
 
     async function Delete() {
         try {
+            setLoadingBtn(true)
             await deleteExpensesOrIncomes('income', toggleModalDelete);
             setToggleModalDelete(false)
+            reset()
             fetchData()
         } catch (error) {
             console.error('Error deleting item', error);
+        } finally {
+            setLoadingBtn(false)
         }
     }
+
+    const renderItem = ({ item, index }) => (
+        <Swipeable
+            key={index}
+            rightContent={
+                <TouchableHighlight
+                    style={{ marginLeft: 2, height: 56, backgroundColor: '#ff6347', justifyContent: 'center', paddingHorizontal: 10 }}
+                    onPress={() => setToggleModalDelete(item.id)}
+                >
+                    <MaterialIcons name="delete-outline" size={30} color="white" />
+                </TouchableHighlight>
+            }
+            onRightActionRelease={() => setToggleModalDelete(item.id)}
+        >
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#333' }}>{item?.source || 'xxxx'}</Text>
+                    <Text style={{ fontSize: 12, marginTop: -1, color: '#555' }}>
+                        {isValid(new Date(item.date)) && format(new Date(item.date), "dd MMM yyyy 'at' HH:mm")}
+                    </Text>
+                </View>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#333', textTransform: 'uppercase' }}>
+                    {item?.amount || 'xxxx'} {currency}
+                </Text>
+            </View>
+        </Swipeable>
+    );
+
+    const renderFooter = () => {
+        if (isLoading) {
+            return (
+                <View className="flex items-center justify-center py-2">
+                    <ActivityIndicator size="small" color="#999" />
+                </View>
+            );
+        } else {
+            return null;
+        }
+    };
 
     return (
         loading ?
@@ -76,24 +147,14 @@ export default function Incomes({ navigation }) {
                     <Text className="mt-1 text-gray-600 text-lg">{lang === 'eng' ? 'Swipe to the right to delete the income.' : 'اسحب لليمين لحذف الإيراد.'}</Text>
                     <View className="py-8 flex flex-col gap-4 justify-center">
                         {incomes.length > 0 ?
-                            incomes.map((income, index) => (
-                                <Swipeable key={index} rightContent={
-                                    (
-                                        <TouchableHighlight className="ml-2 h-14 bg-red-500 flex justify-center px-10">
-                                            <MaterialIcons name="delete-outline" size={30} color="white" />
-                                        </TouchableHighlight>
-                                    )
-                                } onRightActionRelease={() => setToggleModalDelete(income.id)}>
-                                    <View className="flex flex-row justify-between items-center" >
-                                        <View className="flex flex-col justify-center">
-                                            <Text className="text-lg font-bold text-gray-900 capitalize">{income?.source || 'xxxx'}</Text>
-                                            <Text className="text-sm -mt-1 text-gray-700">
-                                                {isValid(new Date(income.date)) && format(new Date(income.date), 'dd MMM yyyy \'at\' HH:mm')}
-                                            </Text>
-                                        </View>
-                                        <Text className="text-xl font-bold text-gray-900 uppercase">{income?.amount || 'xxxx'} {currency}</Text>
-                                    </View ></Swipeable>
-                            )) :
+                            <FlatList
+                                data={incomes}
+                                renderItem={renderItem}
+                                keyExtractor={(_, index) => index.toString()}
+                                onEndReached={handleLoadMoreData}
+                                onEndReachedThreshold={0.1}
+                                ListFooterComponent={renderFooter}
+                            /> :
                             <View className="py-44 flex items-center justify-center">
                                 <SimpleLineIcons name="doc" size={60} color="#959da6" />
                                 <Text className="mt-2 text-gray-400/80 font-light text-xl">{lang === 'eng' ? 'No income are available.' : 'لا توجد أية إيرادات متاحة.'}</Text>
@@ -102,9 +163,9 @@ export default function Incomes({ navigation }) {
                 </View>
 
                 <IncomeFilter toggleModalFilter={toggleModalFilter} setToggleModalFilter={setToggleModalFilter} filterbyDate={filterbyDate} setDate={setDate}
-                    filterByCategorie={filterByCategorie} setSelectedCategorie={setSelectedCategorie} applyFilter={applyFilter} />
+                    filterByCategorie={filterByCategorie} setSelectedCategorie={setSelectedCategorie} applyFilter={applyFilter} loadingBtn={loadingBtn} />
 
-                <ModalDelete toggleModalDelete={toggleModalDelete} setToggleModalDelete={setToggleModalDelete} Delete={Delete} />
+                <ModalDelete toggleModalDelete={toggleModalDelete} setToggleModalDelete={setToggleModalDelete} Delete={Delete} loadingBtn={loadingBtn} />
             </ScrollView>
     )
 }

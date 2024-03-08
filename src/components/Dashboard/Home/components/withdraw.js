@@ -20,7 +20,7 @@ const data = [
     { key: '13', value: 'Others' },
 ]
 
-export default function Withdraw({ toggleModalWithdraw, setToggleModalWithdraw }) {
+export default function Withdraw({ toggleModalWithdraw, setToggleModalWithdraw ,setIschange}) {
     const { lang } = useContext(langContext)
     const [title, setTitle] = useState()
     const [category, setCategory] = useState()
@@ -35,6 +35,7 @@ export default function Withdraw({ toggleModalWithdraw, setToggleModalWithdraw }
             }
             await insertExpense(title, category, amount);
             setError(""); setToggleModalWithdraw(false)
+            setIschange(amount)
         } catch (error) {
             console.log(error);
             setError(lang === 'eng' ? 'something wrong, please try late..' : 'هناك خطأ ما، يرجى المحاولة لاحقًا..');

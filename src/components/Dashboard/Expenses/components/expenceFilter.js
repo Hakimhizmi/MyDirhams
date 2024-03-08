@@ -5,7 +5,7 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import DateTimePicker from 'react-native-ui-datepicker';
 import { langContext } from '../../../../../App'
 
-export default function ExpenceFilter({ toggleModalFilter, setToggleModalFilter, filterbyDate, setDate, filterByCategorie, setSelectedCategorie, applyFilter }) {
+export default function ExpenceFilter({ toggleModalFilter, setToggleModalFilter, filterbyDate, setDate, filterByCategorie, setSelectedCategorie, applyFilter, loadingBtn }) {
     const { lang } = useContext(langContext)
 
     const data = [
@@ -73,8 +73,11 @@ export default function ExpenceFilter({ toggleModalFilter, setToggleModalFilter,
                         dropdownTextStyles={{ color: "#111827" }}
                         placeholder={lang === 'eng' ? 'please select a category' : 'الرجاء اختيار فئة'}
                     />
-                    <TouchableOpacity onPress={() => applyFilter()} className="mt-6 bg-red-600 py-2 rounded-2xl">
-                        <Text className="font-bold text-center text-white text-lg">{lang === 'eng' ? 'Apply' : 'تطبيق التغييرات'}</Text>
+                    <TouchableOpacity onPress={() => { !loadingBtn && applyFilter() }} className="mt-6 bg-red-600 py-2 rounded-2xl">
+                        <Text className="font-bold text-center text-white text-lg">
+                            {loadingBtn ? lang === 'eng' ? 'Loading....' : 'جار التحميل....'
+                                : lang === 'eng' ? 'Apply' : 'تطبيق التغييرات'}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>

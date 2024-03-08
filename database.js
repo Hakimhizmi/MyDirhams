@@ -1,7 +1,8 @@
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('mydirhamsDB.db');
+const itemsPerPage = 15
 
 export const initDatabase = () => {
   return new Promise((resolve, reject) => {
@@ -195,13 +196,14 @@ export const insertIncome = (source, amount) => {
   });
 };
 
-export const getTodayData = () => {
+export const getTodayData = (page = 1) => {
   const todayDate = format(new Date(), 'yyyy-MM-dd');
+  const offset = page > 1 ? (page - 1) * itemsPerPage : 0;
 
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      const expensesQuery = `SELECT 'expense' as type, id, title, category, amount, date FROM expenses WHERE substr(date, 1, 10) = ? ORDER BY date DESC`;
-      const incomeQuery = `SELECT 'income' as type, id, null as title, amount, date, source as title FROM income WHERE substr(date, 1, 10) = ? ORDER BY date DESC`;
+      const expensesQuery = `SELECT 'expense' as type, id, title, category, amount, date FROM expenses WHERE substr(date, 1, 10) = ? ORDER BY date DESC LIMIT ${itemsPerPage} OFFSET ${offset}`;
+      const incomeQuery = `SELECT 'income' as type, id, null as title, amount, date, source as title FROM income WHERE substr(date, 1, 10) = ? ORDER BY date DESC LIMIT ${itemsPerPage} OFFSET ${offset}`;
 
       const expensesPromise = new Promise((resolveExpenses, rejectExpenses) => {
         tx.executeSql(
@@ -237,14 +239,13 @@ export const getTodayData = () => {
 };
 
 
-export const getExpensesOrIncomes = async (table, date = null, category = null) => {
-  date = date ? format(date, 'yyyy-MM-dd') : null
+export const getExpensesOrIncomes = async (table, date = null, category = null, page = 1) => {
+  date = isValid(date) ? format(date, 'yyyy-MM-dd') : null
   const whereClause = date ? 'WHERE substr(date, 1, 10) = ?' : '';
   const categoryFilter = category ? `${date ? 'AND' : 'WHERE'}  ${table === 'expenses' ? 'category' : 'source'} = ?` : '';
-
-  const query = `SELECT * FROM ${table} ${whereClause} ${categoryFilter} ORDER BY date DESC`;
+  const offset = page > 1 ? (page - 1) * itemsPerPage : 0;
+  const query = `SELECT * FROM ${table} ${whereClause} ${categoryFilter} ORDER BY date DESC LIMIT ${itemsPerPage} OFFSET ${offset}`;
   const params = [date, category].filter(param => param !== null && param !== undefined);
-
   try {
     const { rows } = await new Promise((resolve, reject) => {
       db.transaction(tx => {
@@ -256,7 +257,6 @@ export const getExpensesOrIncomes = async (table, date = null, category = null) 
         );
       });
     });
-
     const data = rows._array;
     const { currency } = await getUserData();
     return { data, currency };
@@ -311,5 +311,4 @@ export const deleteExpensesOrIncomes = async (table, id) => {
     throw error;
   }
 };
-
 
