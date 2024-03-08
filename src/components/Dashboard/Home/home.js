@@ -9,7 +9,9 @@ import { getTodayData, getUserData } from '../../../../database'
 import { langContext } from '../../../../App'
 import { useFocusEffect } from '@react-navigation/native'
 import { format, isValid } from 'date-fns'
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons, Ionicons } from '@expo/vector-icons';
+import { getCategoryIcon } from '../../../utils/iconmapping'
+
 
 export default function Home() {
   const [toggleModalDeposit, setToggleModalDeposit] = useState(false)
@@ -72,7 +74,7 @@ export default function Home() {
     <View key={index} className="flex mt-3 flex-row justify-between items-center">
       <View className="flex flex-row gap-3">
         <View className="bg-black/90 rounded-xl p-3">
-          <Image source={require('../../../../assets/svg/food.png')} alt='deposit' className="w-6 h-6" />
+          <Ionicons name={getCategoryIcon(item.type === 'expense' ? item.category : item.title)} size={25} color="white" />
         </View>
         <View className="flex flex-col justify-center">
           <Text className="text-lg font-bold text-gray-900 max-w-[24vh]" numberOfLines={1} ellipsizeMode="tail">{item?.title || 'xxxx'}</Text>
@@ -103,7 +105,7 @@ export default function Home() {
         <Image source={require('../../../../assets/gif/loader.gif')} className="w-64" />
       </View>
       :
-      <ScrollView className="h-screen"   showsVerticalScrollIndicator={false}      >
+      <ScrollView className="h-screen" showsVerticalScrollIndicator={false}      >
         <ImageBackground source={require('../../../../assets/images/gradienta.jpg')} className="bg-red-100 object-cover">
           <View className="px-4 pt-14 flex flex-row justify-between">
             <Text className="w-full text-meduim text-lg text-gray-900 capitalize">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
@@ -157,8 +159,8 @@ export default function Home() {
           </View>
         </ImageBackground>
 
-        <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange}/>
-        <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange}/>
+        <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange} />
+        <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange} />
 
       </ScrollView>
   )
