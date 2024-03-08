@@ -132,7 +132,7 @@ export default function Incomes({ navigation }) {
             </View>
             :
             <ScrollView className="h-screen bg-white px-5 py-6">
-                <View className="flex flex-row justify-between">
+                <View className="flex flex-row justify-between pt-7">
                     <TouchableOpacity onPress={() => navigation.jumpTo('home')} className="py-2 px-2.5 border border-gray-400 rounded-lg flex items-center justify-center">
                         <Ionicons name="chevron-back" size={20} color="black" />
                     </TouchableOpacity>
@@ -144,7 +144,7 @@ export default function Incomes({ navigation }) {
 
                 <View className="pt-8">
                     <Text className="text-black font-extrabold text-2xl">{lang === 'eng' ? 'lastest Incomes' : 'أحدث الإيرادات'}</Text>
-                    <Text className="mt-1 text-gray-600 text-lg">{lang === 'eng' ? 'Swipe to the right to delete the income.' : 'اسحب لليمين لحذف الإيراد.'}</Text>
+                    <Text className="mt-1 text-gray-600 text-lg">{lang === 'eng' ? 'Swipe to the left to delete the expense.' : 'اسحب لليسار لحذف المصروف.'}</Text>
                     <View className="py-8 flex flex-col gap-4 justify-center">
                         {incomes.length > 0 ?
                             <FlatList

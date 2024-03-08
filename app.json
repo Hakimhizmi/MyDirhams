@@ -19,12 +19,18 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/gif/loader.gif",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.hakimhizmi12.mydirhams"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/images/logo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a38f1761-706a-44b0-8042-a1626ec0581b"
+      }
     }
   }
 }

@@ -103,10 +103,10 @@ export default function Home() {
         <Image source={require('../../../../assets/gif/loader.gif')} className="w-64" />
       </View>
       :
-      <ScrollView className="h-screen">
+      <ScrollView className="h-screen"   showsVerticalScrollIndicator={false}      >
         <ImageBackground source={require('../../../../assets/images/gradienta.jpg')} className="bg-red-100 object-cover">
-          <View className="px-4 pt-10 flex flex-row justify-between">
-            <Text className="text-meduim text-lg text-gray-900 capitalize">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
+          <View className="px-4 pt-14 flex flex-row justify-between">
+            <Text className="w-full text-meduim text-lg text-gray-900 capitalize">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
           </View>
           <View className="py-16 flex flex-col gap-3 items-center justify-center">
             <Text className="text-xl font-bold text-gray-800">{lang === 'eng' ? 'Availiable balance' : 'الرصيد المتاح'}</Text>
@@ -115,7 +115,7 @@ export default function Home() {
 
           <View className="bg-white rounded-[70px] h-full px-7 pt-7">
             <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Services' : 'خدمات'} </Text>
-            <View className="px-4 py-6 flex flex-row gap-12">
+            <View className="px-2 py-4 flex flex-row gap-6">
               <TouchableOpacity className="flex flex-col gap-1 items-center" onPress={() => setToggleModalDeposit(true)}>
                 <View className="bg-purple-100 p-4 rounded-full">
                   <Image source={deposit} alt='deposit' className="w-8 h-8" />
@@ -137,7 +137,7 @@ export default function Home() {
             </View>
             <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Today' : 'اليوم'}</Text>
 
-            <View className="pb-4 pt-1 flex flex-col min-h-[34vh]">
+            <View className="pb-4 pt-1 flex flex-col min-h-[28vh]">
               {todayExpensesIncomes.length > 0 ?
                 <FlatList
                   data={todayExpensesIncomes}
@@ -148,9 +148,9 @@ export default function Home() {
                   ListFooterComponent={renderFooter}
                 />
                 :
-                <View className="py-16 flex items-center justify-center">
-                  <SimpleLineIcons name="doc" size={60} color="#959da6" />
-                  <Text className="mt-2 text-gray-400/80 font-light text-xl">{lang === 'eng' ? 'There have been no transactions today.' : 'لم تحدث أي معاملات اليوم.'}</Text>
+                <View className="py-10 flex items-center justify-center">
+                  <SimpleLineIcons name="doc" size={40} color="#959da6" />
+                  <Text className="mt-2 text-gray-400/80 font-light text-xl text-center">{lang === 'eng' ? 'There have been no transactions today.' : 'لم تحدث أي معاملات اليوم.'}</Text>
                 </View>
               }
             </View>

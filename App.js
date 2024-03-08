@@ -51,7 +51,7 @@ function App() {
         <Image source={require('./assets/gif/loader.gif')} className="w-64" />
       </View>
       :
-      <langContext.Provider value={{ lang, toogleLanguage , redirectToDashboard }}>
+      <langContext.Provider value={{ lang, toogleLanguage , redirectToDashboard }} >
         <NavigationContainer>
           <Stack.Navigator initialRouteName={isSignedIn ? 'dashboard' : 'setup'} screenOptions={{ headerShown: false }}>
             {isSignedIn ?

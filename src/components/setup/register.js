@@ -27,9 +27,8 @@ export default function Register() {
       });
   }
   return (
-    <SafeAreaView>
-      <View className="h-screen bg-gray-50 flex justify-center relative">
-        <View className={`mb-16 px-5 flex gap-4 justify-center ${lang === 'ar' && ' items-center'}`}>
+    <SafeAreaView className="h-screen flex justify-center relative">
+        <View className={`mb-14 px-5 flex gap-4 justify-center ${lang === 'ar' && ' items-center'}`}>
           <Image source={Svg} alt='logo' className="w-16 h-16" />
           <Text className="mt-3 text-4xl text-gray-900 font-semibold" >{lang === 'eng' ? ' Set up your MD account' : 'أنشئ حسابك في MD.'}</Text>
           <View className="bg-red-600 px-5 py-4 rounded-b-3xl rounded-tr-3xl">
@@ -39,7 +38,7 @@ export default function Register() {
                 : `أنشئ حسابك بسهولة وبدون رسوم، واستمتع براحة الإعداد كليًا دون الحاجة للاتصال بالإنترنت على جهازك الشخصي.`}</Text>
           </View>
         </View>
-        <View className="mb-24 flex flex-col gap-6 px-5">
+        <View className="mb-14 flex flex-col gap-6 px-5">
           <View className="px-5 pt-2 border border-gray-300/60 rounded-2xl">
             <Text className="text-sm text-gray-600 ml-1">{lang === 'eng' ? 'Username' : 'اسم المستخدم'}</Text>
             <TextInput onChangeText={(text) => setUserName(text)} className="h-9 text-gray-900 text-sm text-left" placeholder='E.g., JohnDoe123' placeholderTextColor="gray" />
@@ -65,7 +64,7 @@ export default function Register() {
           {error && <Text className="text-sm text-center font-bold text-red-500">{error}</Text> }
 
         </View>
-        <View className="flex px-8 flex-row justify-between items-center absolute bottom-16 w-full">
+        <View className="flex px-8 flex-row justify-between items-center absolute bottom-2 w-full">
           <View className="flex flex-row gap-2">
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
@@ -76,7 +75,6 @@ export default function Register() {
             <Text className="text-lg font-bold text-white">{lang === 'eng' ? 'Get Started' : 'ابدأ'}</Text>
           </TouchableOpacity>
         </View>
-      </View>
     </SafeAreaView>
   )
 }

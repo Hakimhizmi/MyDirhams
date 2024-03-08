@@ -4,7 +4,7 @@ import { FontAwesome, Fontisto, MaterialCommunityIcons, Ionicons } from '@expo/v
 
 export default function CustomTabBar({ state, navigation }) {
   return (
-    <View className="bg-white py-2 flex space-x-8 flex-row items-center justify-center">
+    <View className="bg-white py-2 flex space-x-4 flex-row items-center justify-center">
       <TouchableOpacity onPress={() => navigation.jumpTo('home')} className={`p-3 rounded-2xl ${state.index === 0 && 'bg-black'}`}>
         <FontAwesome name="home" size={25} color={`${state.index === 0 ? 'white' : 'black'}`} />
       </TouchableOpacity>
