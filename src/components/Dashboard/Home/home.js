@@ -112,7 +112,7 @@ export default function Home() {
           </View>
           <View className="py-16 flex flex-col gap-3 items-center justify-center">
             <Text className="text-xl font-bold text-gray-800">{lang === 'eng' ? 'Availiable balance' : 'الرصيد المتاح'}</Text>
-            <Text className="text-6xl font-black text-black text-center">{userData?.balance || '........'} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
+            <Text className="text-6xl font-black text-black text-center">{ userData?.balance ? parseFloat(userData.balance).toFixed(2) : "N/A"} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
           </View>
 
           <View className="bg-white rounded-[70px] h-full px-7 pt-7">
