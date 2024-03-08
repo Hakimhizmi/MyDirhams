@@ -131,7 +131,14 @@ export default function Incomes({ navigation }) {
                 <Image source={require('../../../../assets/gif/loader.gif')} className="w-64" />
             </View>
             :
-            <ScrollView className="h-screen bg-white px-5 py-6">
+            <ScrollView className="h-screen bg-white px-5 py-6" onMomentumScrollEnd={(event) => {
+                const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+                const distanceFromBottom = contentSize.height - layoutMeasurement.height - contentOffset.y;
+                // Adjust the threshold as needed
+                if (distanceFromBottom < 50 && !isLoading) {
+                  handleLoadMoreData();
+                }
+              }}>
                 <View className="flex flex-row justify-between pt-7">
                     <TouchableOpacity onPress={() => navigation.jumpTo('home')} className="py-2 px-2.5 border border-gray-400 rounded-lg flex items-center justify-center">
                         <Ionicons name="chevron-back" size={20} color="black" />
@@ -151,8 +158,6 @@ export default function Incomes({ navigation }) {
                                 data={incomes}
                                 renderItem={renderItem}
                                 keyExtractor={(_, index) => index.toString()}
-                                onEndReached={handleLoadMoreData}
-                                onEndReachedThreshold={0.1}
                                 ListFooterComponent={renderFooter}
                             /> :
                             <View className="py-44 flex items-center justify-center">

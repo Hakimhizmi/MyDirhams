@@ -2,7 +2,7 @@ import { format, isValid } from 'date-fns';
 import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabase('mydirhamsDB.db');
-const itemsPerPage = 15
+const itemsPerPage = 20
 
 export const initDatabase = () => {
   return new Promise((resolve, reject) => {
