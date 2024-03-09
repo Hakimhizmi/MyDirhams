@@ -5,6 +5,7 @@ import Statistique from './components/Dashboard/statistique/statistique';
 import CustomTabBar from './components/Dashboard/components/customTabBar';
 import Expenses from './components/Dashboard/Expenses/expenses';
 import Incomes from './components/Dashboard/Incomes/incomes';
+import Settings from './components/Dashboard/settings/settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +18,7 @@ export default function Dashboard() {
       <Tab.Screen name="statistique" component={Statistique} />
       <Tab.Screen name="expenses" component={Expenses} />
       <Tab.Screen name="incomes" component={Incomes} />
+      <Tab.Screen name="settings" component={Settings} />
     </Tab.Navigator>
   )
 }

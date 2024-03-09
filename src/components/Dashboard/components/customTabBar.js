@@ -17,7 +17,7 @@ export default function CustomTabBar({ state, navigation }) {
       <TouchableOpacity onPress={() => navigation.jumpTo('incomes')} className={`p-3 rounded-2xl ${state.index === 3 && 'bg-black'}`}>
         <MaterialCommunityIcons name="wallet-plus" size={25} color={`${state.index === 3 ? 'white' : 'black'}`} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.jumpTo('home')} className={`p-3 rounded-2xl ${state.index === 4 && 'bg-black'}`}>
+      <TouchableOpacity onPress={() => navigation.jumpTo('settings')} className={`p-3 rounded-2xl ${state.index === 4 && 'bg-black'}`}>
         <Ionicons name="settings" size={25} color={`${state.index === 4 ? 'white' : 'black'}`} />
       </TouchableOpacity>
     </View>
