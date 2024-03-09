@@ -15,7 +15,7 @@ export default function Info({ navigation }) {
             {lang === 'eng' ? ' A Simple expense tracker that makes managing expenses easy.' : 'متتبع مصاريف بسيط يجعل إدارة المصاريف سهلة.'}
           </Text>
         </View>
-        <View className="flex px-8 flex-row justify-between items-center absolute bottom-2 w-full">
+        <View className="flex px-8 flex-row justify-between items-center absolute bottom-5 w-full">
           <View className="flex flex-row gap-2">
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>

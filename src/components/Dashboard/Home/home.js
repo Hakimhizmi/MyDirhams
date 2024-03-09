@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import deposit from '../../../../assets/svg/deposit.png'
 import withdraw from '../../../../assets/svg/withdraw.png'
@@ -146,7 +146,7 @@ export default function Home() {
             </View>
             <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Today' : 'اليوم'}</Text>
 
-            <View className="pb-4 pt-1 flex flex-col min-h-[28vh]">
+            <View className="pb-4 pt-1 flex flex-col min-h-[31vh]">
               {todayExpensesIncomes.length > 0 ?
                 <FlatList
                   data={todayExpensesIncomes}
@@ -155,8 +155,8 @@ export default function Home() {
                   ListFooterComponent={renderFooter}
                 />
                 :
-                <View className="py-10 flex items-center justify-center">
-                  <SimpleLineIcons name="doc" size={40} color="#959da6" />
+                <View className="py-[8vh] flex items-center justify-center">
+                  <SimpleLineIcons name="doc" size={40} color="#d1d5db" />
                   <Text className="mt-2 text-gray-400/80 font-light text-xl text-center">{lang === 'eng' ? 'There have been no transactions today.' : 'لم تحدث أي معاملات اليوم.'}</Text>
                 </View>
               }

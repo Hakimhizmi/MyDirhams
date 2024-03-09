@@ -11,8 +11,9 @@ export default function Welcome({ navigation }) {
         <View className='mb-14 flex items-center justify-center'>
           <Image source={Logo} alt='logo' className="w-40 h-40" />
           <Text className="mt-3 text-5xl text-black font-semibold">{lang === 'eng' ? (<Text>My<Text className="font-light">Dirhams</Text></Text>) : 'درهماتي'}</Text>
+          <Text className="text-sm text-black/70 font-bold">{lang === 'eng' ? 'The application was developed by Hakimhizmi.' : 'تم تطوير التطبيق بواسطة Hakimhizmi.'}</Text>
         </View>
-        <View className="flex px-8 flex-row justify-between items-center absolute bottom-2 w-full">
+        <View className="flex px-8 flex-row justify-between items-center absolute bottom-5 w-full">
           <View className="flex flex-row gap-2">
             <View className="w-2.5 h-1.5 bg-red-600 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>

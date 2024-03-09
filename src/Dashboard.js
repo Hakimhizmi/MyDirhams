@@ -1,7 +1,7 @@
 import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './components/Dashboard/Home/home';
-import Statistique from './components/Dashboard/statistique';
+import Statistique from './components/Dashboard/statistique/statistique';
 import CustomTabBar from './components/Dashboard/components/customTabBar';
 import Expenses from './components/Dashboard/Expenses/expenses';
 import Incomes from './components/Dashboard/Incomes/incomes';

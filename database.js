@@ -63,11 +63,11 @@ export const checkIfDatabaseExists = () => {
             if (tableExists) {
               // 'users' table exists, check if it has data
               tx.executeSql(
-                'SELECT COUNT(*) as count FROM users',
+                'SELECT * FROM users',
                 [],
                 (_, { rows }) => {
-                  const userCount = rows.item(0).count;
-                  resolve(userCount > 0);
+                  const lang = rows.item(0).lang;
+                  resolve(lang ? lang : false);
                 },
                 (_, error) => reject(error)
               );
@@ -311,4 +311,72 @@ export const deleteExpensesOrIncomes = async (table, id) => {
     throw error;
   }
 };
+
+
+//statistique
+
+export const getStatistiqueData = async (table, selectedYear) => {
+  return new Promise(async (resolve, reject) => {
+    const monthsArray = Array.from({ length: 12 }, () => 0);
+
+    const fetchData = (query, onSuccess) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          query,
+          [selectedYear.toString()],
+          (_, { rows }) => {
+            onSuccess(rows._array);
+          },
+          (_, error) => {
+            console.error('Error fetching data:', error);
+            reject(error);
+          }
+        );
+      });
+    };
+
+    const totalAmountQuery = `
+      SELECT 
+        strftime('%m', date) as month,
+        SUM(amount) as totalAmount
+      FROM ${table}
+      WHERE strftime('%Y', date) = ?
+      GROUP BY strftime('%m', date)
+      ORDER BY strftime('%m', date);
+    `;
+
+    const categoryPercentageQuery = `
+    SELECT 
+      ${table === 'expenses' ? 'category' : 'source'} as category,
+      SUM(amount) as totalAmount
+    FROM ${table}
+    WHERE strftime('%Y', date) = ?
+    GROUP BY ${table === 'expenses' ? 'category' : 'source'}
+    ORDER BY ${table === 'expenses' ? 'category' : 'source'};
+  `;
+
+
+    fetchData(totalAmountQuery, async (totalAmountData) => {
+      let totalExpenses = 0;
+      totalAmountData.forEach((item) => {
+        const monthIndex = parseInt(item.month, 10) - 1;
+        monthsArray[monthIndex] = item.totalAmount;
+        totalExpenses += item.totalAmount;
+      });
+
+      const { currency } = await getUserData();
+
+      fetchData(categoryPercentageQuery, (categoryData) => {
+        const totalCategoryExpenses = categoryData.reduce((acc, categoryItem) => acc + categoryItem.totalAmount, 0);
+        const categoriesPercentage = categoryData.map((categoryItem) => ({
+          category: categoryItem.category,
+          percentage: (categoryItem.totalAmount / totalCategoryExpenses) * 100,
+        }));
+
+        resolve({ monthsArray, totalExpenses, currency, categoriesPercentage });
+      });
+    });
+  });
+};
+
 

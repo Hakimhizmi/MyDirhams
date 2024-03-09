@@ -24,6 +24,7 @@ function App() {
         // Check if the database exists
         const databaseExists = await checkIfDatabaseExists();
         if (databaseExists) {
+          setLang(databaseExists);
           setIsSignedIn(true)
         } else {
           initDatabase()

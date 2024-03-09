@@ -23,10 +23,3 @@ export default function CustomTabBar({ state, navigation }) {
     </View>
   )
 }
-
-
-const styles = StyleSheet.create({
-  filterImage: {
-    tintColor: 'white',
-  },
-});
