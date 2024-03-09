@@ -65,7 +65,7 @@ export default function Charts({table}) {
       <ScrollView className="h-screen bg-white" >
         <View className="mt-4 flex flex-col space-y-2 items-center">
           <View className="flex flex-row items-center space-x-2">
-            <Text className="text-xl font-bold uppercase">Total {table}</Text>
+            <Text className="text-xl font-bold uppercase">{lang === 'eng' ? `Total ${table === 'expenses' ? 'expenses' : 'incomes'}` : `إجمالي ${table === 'expenses' ? 'النفقات' : 'الإيرادات'}`}</Text>
             <Text className="text-xs font-bold mt-1">{selectedYear}</Text>
           </View>
           <Text className="text-4xl font-meduim uppercase">{parseFloat(totalExpensesPerYear).toFixed(2)} {currency}</Text>

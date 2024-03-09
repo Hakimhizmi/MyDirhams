@@ -1,11 +1,11 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { FontAwesome, Fontisto, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 export default function CustomTabBar({ state, navigation }) {
   return (
-    <View className="bg-white py-2 flex space-x-4 flex-row items-center justify-center">
-      <TouchableOpacity onPress={() => navigation.jumpTo('home')} className={`p-3 rounded-2xl ${state.index === 0 && 'bg-black'}`}>
+    <View className="bg-white py-2 flex space-x-4 flex-row items-center justify-center border-t border-gray-100">
+      <TouchableOpacity onPress={() => navigation.jumpTo('home')} className={`p-3 rounded-2xl flex items-center ${state.index === 0 && 'bg-black'}`}>
         <FontAwesome name="home" size={25} color={`${state.index === 0 ? 'white' : 'black'}`} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.jumpTo('statistique')} className={`p-3 rounded-2xl ${state.index === 1 && 'bg-black'}`}>
