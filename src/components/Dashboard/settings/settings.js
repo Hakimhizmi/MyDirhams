@@ -4,11 +4,14 @@ import { langContext } from '../../../../App'
 import { Ionicons, FontAwesome, MaterialIcons, Entypo, AntDesign, Octicons } from '@expo/vector-icons';
 import { getUserData } from '../../../../database';
 import { useFocusEffect } from '@react-navigation/native';
+import EditModal from './components/editModal';
 
 export default function Settings({ navigation }) {
     const { lang } = useContext(langContext)
     const [loading, setLoading] = useState(true)
     const [userData, setUserData] = useState({})
+    const [toggleModal,setToggleModal] = useState(false)
+
 
     useFocusEffect(
         useCallback(() => {
@@ -37,7 +40,7 @@ export default function Settings({ navigation }) {
                     <View className="mt-9">
                         <Text className="text-black font-bold text-md text-gray-900">{lang === 'eng' ? 'General' : 'إعدادات عامة'}</Text>
                         <View className="mt-2 bg-slate-100 rounded-xl border border-slate-300">
-                            <View className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
+                            <TouchableOpacity onPress={()=>setToggleModal(true)} className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <FontAwesome name="user-o" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'username' : 'اسم المستخدم'}</Text>
@@ -46,8 +49,8 @@ export default function Settings({ navigation }) {
                                     <Text className="text-sm font-bold text-gray-500">{userData?.username || 'N/A'}</Text>
                                     <MaterialIcons name="navigate-next" size={25} color="#334155" />
                                 </View>
-                            </View>
-                            <View className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
+                            </TouchableOpacity>
+                            <TouchableOpacity className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <FontAwesome name="money" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'balance' : 'رصيد'}</Text>
@@ -56,8 +59,8 @@ export default function Settings({ navigation }) {
                                     <Text className="text-sm font-bold text-gray-500 uppercase">{parseFloat(userData?.balance).toFixed(2) || 'N/A'} {userData?.currency || ''}</Text>
                                     <MaterialIcons name="navigate-next" size={25} color="#334155" />
                                 </View>
-                            </View>
-                            <View className="p-4 flex flex-row justify-between items-center">
+                            </TouchableOpacity>
+                            <TouchableOpacity className="p-4 flex flex-row justify-between items-center">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <MaterialIcons name="currency-exchange" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'currency' : 'عُمْلَة'}</Text>
@@ -66,12 +69,12 @@ export default function Settings({ navigation }) {
                                     <Text className="text-sm font-bold text-gray-500 uppercase">{userData?.currency || 'N/A'}</Text>
                                     <MaterialIcons name="navigate-next" size={25} color="#334155" />
                                 </View>
-                            </View>
+                            </TouchableOpacity>
 
                         </View>
                         <Text className="mt-8 text-black font-bold text-md text-gray-900">{lang === 'eng' ? 'Interface' : 'إعدادات الواجهة'}</Text>
                         <View className="mt-2 bg-slate-100 rounded-xl border border-slate-300">
-                            <View className="p-4 flex flex-row justify-between items-center">
+                            <TouchableOpacity className="p-4 flex flex-row justify-between items-center">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <Entypo name="language" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'language' : 'لغة'} </Text>
@@ -80,18 +83,18 @@ export default function Settings({ navigation }) {
                                     <Text className="text-sm font-bold text-gray-500">{userData?.lang === 'eng' ? 'english' : 'العربية' || 'N/A'}</Text>
                                     <MaterialIcons name="navigate-next" size={25} color="#334155" />
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         </View>
 
 
-                        <View className="mt-14 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity className="mt-16 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <AntDesign name="like2" size={24} color="#334155" />
                             <View className="">
                                 <Text className="text-lg font-extrabold">{lang === 'eng' ? 'Leave feedback' : 'ترك ردود الفعل'}</Text>
                                 <Text className="text-md font-meduim">{lang === 'eng' ? 'Let us know what you think of the app.' : 'أخبرنا برأيك في التطبيق.'}</Text>
                             </View>
-                        </View>
-                        <View className="mt-5 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        </TouchableOpacity>
+                        <TouchableOpacity className="mt-4 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <Octicons name="repo-deleted" size={24} color="red" />
                             <View className="">
                                 <Text className="text-lg font-extrabold text-red-600">{lang === 'eng' ? 'Delete account' : 'حذف الحساب'}</Text>
@@ -100,9 +103,11 @@ export default function Settings({ navigation }) {
                                         : `حذف حسابك سيقوم بإزالة جميع معلوماتك من قاعدة بياناتنا. لا يمكن التراجع عن هذا الإجراء.`}
                                 </Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
+
+                <EditModal toggleModal={toggleModal} setToggleModal={setToggleModal} loadingBtn={false}/>
             </ScrollView>
     )
 }
