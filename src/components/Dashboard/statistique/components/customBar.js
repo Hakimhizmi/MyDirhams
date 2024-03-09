@@ -9,7 +9,7 @@ export default function CustomBar({ state, navigation }) {
                 <Text className="text-lg font-meduim">Expenses</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.jumpTo('income_statistique')} className={`px-10 py-4 ${state.index === 1 && 'border-b-2 border-black'}`}>
-                <Text className="text-lg font-meduim">Incomes</Text>
+                <Text className="text-lg font-meduim">Income</Text>
             </TouchableOpacity>
         </View>
     )

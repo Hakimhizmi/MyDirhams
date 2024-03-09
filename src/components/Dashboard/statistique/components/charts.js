@@ -65,7 +65,7 @@ export default function Charts({table}) {
       <ScrollView className="h-screen bg-white" >
         <View className="mt-4 flex flex-col space-y-2 items-center">
           <View className="flex flex-row items-center space-x-2">
-            <Text className="text-xl font-bold uppercase">Total Expenses</Text>
+            <Text className="text-xl font-bold uppercase">Total {table}</Text>
             <Text className="text-xs font-bold mt-1">{selectedYear}</Text>
           </View>
           <Text className="text-4xl font-meduim uppercase">{parseFloat(totalExpensesPerYear).toFixed(2)} {currency}</Text>
@@ -91,7 +91,7 @@ export default function Charts({table}) {
           />
           <View className="flex mt-2 flex-row flex-row-reverse">
             {Array.from({ length: 5 }, (_, index) => (
-              <TouchableOpacity onPress={() => setselectedYear(currentYear - index)} className={`px-5 py-2 ${(currentYear - index) === selectedYear && 'bg-red-100 rounded-2xl'}`}>
+              <TouchableOpacity onPress={() => setselectedYear(currentYear - index)} className={`px-4 py-2 ${(currentYear - index) === selectedYear && 'bg-red-100 rounded-2xl'}`}>
                 <Text className={`font-bold text-gray-700 ${(currentYear - index) === selectedYear ? 'text-red-500' : 'text-gray-700'}`}>{currentYear - index}</Text>
               </TouchableOpacity>
             ))}
@@ -115,9 +115,9 @@ export default function Charts({table}) {
               backgroundColor="transparent"
               style={{ marginTop: 22 }}
             /> :
-            <View className="py-20 flex items-center justify-center">
+            <View className="py-10 flex items-center justify-center">
               <AntDesign name="piechart" size={60} color="#d1d5db" />
-              <Text className="mt-4 text-gray-400/80 font-light text-xl text-center uppercase">
+              <Text className="mt-4 text-gray-400/80 font-light text-lg text-center uppercase">
                 {lang === 'eng' ? 'No statistical data is available.' : 'لا توجد إحصائيات متاحة.'}</Text>
             </View>
           }
