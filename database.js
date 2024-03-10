@@ -379,4 +379,21 @@ export const getStatistiqueData = async (table, selectedYear) => {
   });
 };
 
+//settings
 
+export const updateUserInfo = (key, value) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `UPDATE users SET ${key} = ?`,
+        [value],
+        (_, success) => {
+          resolve(success);
+        },
+        (_, error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+};

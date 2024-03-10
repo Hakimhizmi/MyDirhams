@@ -10,8 +10,9 @@ export default function Settings({ navigation }) {
     const { lang } = useContext(langContext)
     const [loading, setLoading] = useState(true)
     const [userData, setUserData] = useState({})
-    const [toggleModal,setToggleModal] = useState(false)
-
+    const [toggleModal, setToggleModal] = useState(false)
+    const [edit, setEdit] = useState({ key: "", value: "" })
+    const [isChange,setIschange] = useState()
 
     useFocusEffect(
         useCallback(() => {
@@ -19,7 +20,7 @@ export default function Settings({ navigation }) {
             getUserData().then((data) => setUserData(data))
                 .catch((error) => console.error('Error fetching:', error))
                 .finally(() => setLoading(false))
-        }, [])
+        }, [isChange])
     );
 
     return (
@@ -40,7 +41,11 @@ export default function Settings({ navigation }) {
                     <View className="mt-9">
                         <Text className="text-black font-bold text-md text-gray-900">{lang === 'eng' ? 'General' : 'إعدادات عامة'}</Text>
                         <View className="mt-2 bg-slate-100 rounded-xl border border-slate-300">
-                            <TouchableOpacity onPress={()=>setToggleModal(true)} className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
+                            <TouchableOpacity onPress={() => {
+                                setEdit({ key: "username", value: userData?.username })
+                                setToggleModal(true)
+                            }}
+                                className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <FontAwesome name="user-o" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'username' : 'اسم المستخدم'}</Text>
@@ -50,7 +55,10 @@ export default function Settings({ navigation }) {
                                     <MaterialIcons name="navigate-next" size={25} color="#334155" />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
+                            <TouchableOpacity onPress={() => {
+                                setEdit({ key: "balance", value: userData?.balance })
+                                setToggleModal(true)
+                            }} className="p-4 flex flex-row justify-between items-center border-b border-slate-300">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <FontAwesome name="money" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'balance' : 'رصيد'}</Text>
@@ -60,7 +68,10 @@ export default function Settings({ navigation }) {
                                     <MaterialIcons name="navigate-next" size={25} color="#334155" />
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity className="p-4 flex flex-row justify-between items-center">
+                            <TouchableOpacity onPress={() => {
+                                setEdit({ key: "currency", value: userData?.currency })
+                                setToggleModal(true)
+                            }} className="p-4 flex flex-row justify-between items-center">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <MaterialIcons name="currency-exchange" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'currency' : 'عُمْلَة'}</Text>
@@ -74,7 +85,10 @@ export default function Settings({ navigation }) {
                         </View>
                         <Text className="mt-8 text-black font-bold text-md text-gray-900">{lang === 'eng' ? 'Interface' : 'إعدادات الواجهة'}</Text>
                         <View className="mt-2 bg-slate-100 rounded-xl border border-slate-300">
-                            <TouchableOpacity className="p-4 flex flex-row justify-between items-center">
+                            <TouchableOpacity onPress={() => {
+                                setEdit({ key: "lang", value: userData?.lang })
+                                setToggleModal(true)
+                            }} className="p-4 flex flex-row justify-between items-center">
                                 <View className="flex flex-row space-x-2 items-center">
                                     <Entypo name="language" size={20} color="#334155" />
                                     <Text className="text-lg font-extrabold">{lang === 'eng' ? 'language' : 'لغة'} </Text>
@@ -107,7 +121,7 @@ export default function Settings({ navigation }) {
                     </View>
                 </View>
 
-                <EditModal toggleModal={toggleModal} setToggleModal={setToggleModal} loadingBtn={false}/>
+                {toggleModal && <EditModal toggleModal={toggleModal} setToggleModal={setToggleModal} edit={edit} setIschange={setIschange}/>}
             </ScrollView>
     )
 }
