@@ -30,7 +30,7 @@ const colors = [
   '#FFD233',
 ];
 
-export default function Charts({table}) {
+export default function Charts({ table }) {
   const { lang } = useContext(langContext)
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -74,7 +74,7 @@ export default function Charts({table}) {
           <BarChart
             data={{
               labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-              datasets: [{ data: dataTotalAmountPerMonth.length ? dataTotalAmountPerMonth : [0,0,0,0,0,0,0,0,0,0,0,0] }]
+              datasets: [{ data: dataTotalAmountPerMonth.length ? dataTotalAmountPerMonth : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }]
             }}
             width={Dimensions.get("window").width}
             height={300}
@@ -82,7 +82,7 @@ export default function Charts({table}) {
             yAxisSuffix=""
             chartConfig={{
               backgroundGradientFrom: "white",
-              backgroundGradientTo: "whie",
+              backgroundGradientTo: "white",
               color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
               labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
               barPercentage: 0.5,

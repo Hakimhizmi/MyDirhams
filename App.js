@@ -9,7 +9,7 @@ import { Image, LogBox, View } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 export const langContext = createContext()
-LogBox.ignoreAllLogs();
+//LogBox.ignoreAllLogs();
 
 function App() {
   const [loading, setLoading] = useState(true)

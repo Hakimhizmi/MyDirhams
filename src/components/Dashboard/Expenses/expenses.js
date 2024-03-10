@@ -131,7 +131,7 @@ export default function Expenses({ navigation }) {
                   handleLoadMoreData();
                 }
               }}>
-                <View className="flex flex-row justify-between pt-2">
+                <View className="flex flex-row justify-between pt-5">
                     <TouchableOpacity onPress={() => navigation.jumpTo('home')} className="py-2 px-2.5 border border-gray-400 rounded-lg flex items-center justify-center">
                         <Ionicons name="chevron-back" size={20} color="black" />
                     </TouchableOpacity>

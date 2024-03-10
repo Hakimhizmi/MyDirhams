@@ -8,8 +8,14 @@ const Tab = createMaterialTopTabNavigator();
 export default function Statistique() {
   return (
     <Tab.Navigator initialRouteName='expenses_statistique' tabBar={(props) => <CustomBar {...props} />} >
-      <Tab.Screen name="expenses_statistique" component={() => <Charts table={'expenses'} />} />
-      <Tab.Screen name="income_statistique" component={() => <Charts table={'income'} />} />
+      <Tab.Screen name="expenses_statistique" key="expenses">
+        {() => <Charts table={'expenses'} />}
+      </Tab.Screen>
+      <Tab.Screen name="income_statistique" key="income">
+        {() => <Charts table={'income'} />}
+      </Tab.Screen>
     </Tab.Navigator>
+
+
   )
 }

@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useState } from 'react'
 import { ActivityIndicator, FlatList, Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import deposit from '../../../../assets/svg/deposit.png'
 import withdraw from '../../../../assets/svg/withdraw.png'
-import savemoney from '../../../../assets/svg/savemoney.png'
 import Deposit from './components/deposit'
 import Withdraw from './components/withdraw'
 import { getTodayData, getUserData } from '../../../../database'
@@ -137,12 +136,7 @@ export default function Home() {
                 </View>
                 <Text className="text-lg font-semibold text-gray-900">{lang === 'eng' ? 'Withdraw' : 'سحب'} </Text>
               </TouchableOpacity>
-              <TouchableOpacity className="flex flex-col gap-1 items-center">
-                <View className="bg-orange-100 p-4 rounded-full">
-                  <Image source={savemoney} alt='deposit' className="w-8 h-8" />
-                </View>
-                <Text className="text-lg font-semibold text-gray-900">{lang === 'eng' ? 'Save Money' : 'توفير الأموال'}</Text>
-              </TouchableOpacity>
+             
             </View>
             <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Today' : 'اليوم'}</Text>
 
