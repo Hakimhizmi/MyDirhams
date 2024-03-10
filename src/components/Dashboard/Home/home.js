@@ -164,8 +164,8 @@ export default function Home() {
           </View>
         </ImageBackground>
 
-        <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange} />
-        <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange} />
+        {toggleModalDeposit && <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange} />}
+        {toggleModalWithdraw && <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange} />}
 
       </ScrollView>
   )
