@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { langContext } from '../../../../App'
 import { Ionicons, FontAwesome, MaterialIcons, Entypo, AntDesign, Octicons } from '@expo/vector-icons';
 import { getUserData } from '../../../../database';
@@ -24,6 +24,17 @@ export default function Settings({ navigation }) {
                 .finally(() => setLoading(false))
         }, [isChange])
     );
+
+    const handleEmailRedirect = () => {
+        const emailUrl = `mailto:hizmi.abdelhakim@gmail.com`;
+        Linking.canOpenURL(emailUrl).then((supported) => {
+            if (supported) {
+                Linking.openURL(emailUrl);
+            } else {
+                console.error("Don't know how to open URI: " + emailUrl);
+            }
+        });
+    };
 
     return (
         loading ?
@@ -103,7 +114,7 @@ export default function Settings({ navigation }) {
                         </View>
 
 
-                        <TouchableOpacity className="mt-16 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity onPress={()=>handleEmailRedirect()} className="mt-16 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <AntDesign name="like2" size={24} color="#334155" />
                             <View className="">
                                 <Text className="text-lg font-extrabold">{lang === 'eng' ? 'Leave feedback' : 'ترك ردود الفعل'}</Text>
