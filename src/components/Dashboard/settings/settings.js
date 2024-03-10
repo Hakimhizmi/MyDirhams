@@ -114,18 +114,18 @@ export default function Settings({ navigation }) {
                         </View>
 
 
-                        <TouchableOpacity onPress={()=>handleEmailRedirect()} className="mt-16 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity onPress={()=>handleEmailRedirect()} className="mt-14 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <AntDesign name="like2" size={24} color="#334155" />
                             <View className="">
                                 <Text className="text-lg font-extrabold">{lang === 'eng' ? 'Leave feedback' : 'ترك ردود الفعل'}</Text>
-                                <Text className="text-md font-meduim">{lang === 'eng' ? 'Let us know what you think of the app.' : 'أخبرنا برأيك في التطبيق.'}</Text>
+                                <Text className="text-md w-[32vh] font-meduim">{lang === 'eng' ? 'Let us know what you think of the app.' : 'أخبرنا برأيك في التطبيق.'}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setToggleModalDelete(true)} className="mt-4 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity onPress={() => setToggleModalDelete(true)} className="mt-4 mb-8 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <Octicons name="repo-deleted" size={24} color="red" />
                             <View className="">
                                 <Text className="text-lg font-extrabold text-red-600">{lang === 'eng' ? 'Delete account' : 'حذف الحساب'}</Text>
-                                <Text className="text-xs font-meduim text-red-500">
+                                <Text className="text-xs w-[32vh] font-meduim text-red-500">
                                     {lang === 'eng' ? `Deleting your account will remove all of your information from our database. This cannot be undone.`
                                         : `حذف حسابك سيقوم بإزالة جميع معلوماتك من قاعدة بياناتنا. لا يمكن التراجع عن هذا الإجراء.`}
                                 </Text>
