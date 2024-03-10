@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
 import IncomeFilter from './components/incomeFilter'
 import { Ionicons, Entypo } from '@expo/vector-icons';
@@ -136,10 +136,10 @@ export default function Incomes({ navigation }) {
                 const distanceFromBottom = contentSize.height - layoutMeasurement.height - contentOffset.y;
                 // Adjust the threshold as needed
                 if (distanceFromBottom < 50 && !isLoading) {
-                  handleLoadMoreData();
+                    handleLoadMoreData();
                 }
-              }}>
-                <View className="flex flex-row justify-between pt-5">
+            }}>
+                <View className="flex flex-row justify-between pt-2">
                     <TouchableOpacity onPress={() => navigation.jumpTo('home')} className="py-2 px-2.5 border border-gray-400 rounded-lg flex items-center justify-center">
                         <Ionicons name="chevron-back" size={20} color="black" />
                     </TouchableOpacity>

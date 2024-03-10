@@ -61,7 +61,7 @@ export default function Expenses({ navigation }) {
             fetchData(filterbyDate, filterByCategorie, page + 1);
         }
     }
-    
+
     async function applyFilter() {
         setLoadingBtn(true)
         reset()
@@ -128,10 +128,10 @@ export default function Expenses({ navigation }) {
                 const distanceFromBottom = contentSize.height - layoutMeasurement.height - contentOffset.y;
                 // Adjust the threshold as needed
                 if (distanceFromBottom < 50 && !isLoading) {
-                  handleLoadMoreData();
+                    handleLoadMoreData();
                 }
-              }}>
-                <View className="flex flex-row justify-between pt-5">
+            }}>
+                <View className="flex flex-row justify-between pt-2">
                     <TouchableOpacity onPress={() => navigation.jumpTo('home')} className="py-2 px-2.5 border border-gray-400 rounded-lg flex items-center justify-center">
                         <Ionicons name="chevron-back" size={20} color="black" />
                     </TouchableOpacity>

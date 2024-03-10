@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from './src/Dashboard';
 import Setup from './src/Setup';
 import { initDatabase, checkIfDatabaseExists, getTable } from './database';
-import { Image, LogBox, View } from 'react-native';
+import { Image, LogBox, StatusBar, View } from 'react-native';
 
 
 const Stack = createNativeStackNavigator();
@@ -51,22 +51,26 @@ function App() {
     setIsSignedIn(false);
   }
   return (
-    loading ?
-      <View className="h-screen bg-white flex items-center justify-center">
-        <Image source={require('./assets/gif/loader.gif')} className="w-64" />
+    <myContext.Provider value={{ lang, toogleLanguage, redirectToDashboard, LeaveDashboard }} >
+      <View style={{ flex: 1 }}>
+        <StatusBar backgroundColor="transparent" barStyle="dark-content" />
+        {loading ?
+          (<View className="h-screen bg-white flex items-center justify-center">
+            <Image source={require('./assets/gif/loader.gif')} className="w-64" />
+          </View>)
+          :
+          (<NavigationContainer>
+            <Stack.Navigator initialRouteName={isSignedIn ? 'dashboard' : 'setup'} screenOptions={{ headerShown: false }}>
+              {isSignedIn ?
+                <Stack.Screen name='dashboard' component={Dashboard} />
+                :
+                <Stack.Screen name='setup' component={Setup} />
+              }
+            </Stack.Navigator>
+          </NavigationContainer>)
+        }
       </View>
-      :
-      <myContext.Provider value={{ lang, toogleLanguage , redirectToDashboard , LeaveDashboard }} >
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName={isSignedIn ? 'dashboard' : 'setup'} screenOptions={{ headerShown: false }}>
-            {isSignedIn ?
-              <Stack.Screen name='dashboard' component={Dashboard} />
-              :
-              <Stack.Screen name='setup' component={Setup} />
-            }
-          </Stack.Navigator>
-        </NavigationContainer>
-      </myContext.Provider>
+    </myContext.Provider>
   )
 }
 

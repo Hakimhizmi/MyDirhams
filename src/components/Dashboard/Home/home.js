@@ -99,68 +99,68 @@ export default function Home() {
   };
 
   return (
-    loading ?
-      <View className="h-screen bg-white flex items-center justify-center">
-        <Image source={require('../../../../assets/gif/loader.gif')} className="w-64" />
-      </View>
-      :
-      <ScrollView className="h-screen" showsVerticalScrollIndicator={false} onMomentumScrollEnd={(event) => {
-        const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
-        const distanceFromBottom = contentSize.height - layoutMeasurement.height - contentOffset.y;
-        // Adjust the threshold as needed
-        if (distanceFromBottom < 50 && !isLoading) {
-          handleLoadMoreData();
-        }
-      }} >
-        <ImageBackground source={require('../../../../assets/images/gradienta.jpg')} className="bg-red-100 object-cover">
-          <View className="px-4 pt-14 flex flex-row justify-between">
-            <Text className="w-full text-meduim text-lg text-gray-900 capitalize">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
-          </View>
-          <View className="py-16 flex flex-col gap-3 items-center justify-center">
-            <Text className="text-xl font-bold text-gray-800">{lang === 'eng' ? 'Availiable balance' : 'الرصيد المتاح'}</Text>
-            <Text className="text-6xl font-black text-black text-center">{userData?.balance ? parseFloat(userData.balance).toFixed(2) : "N/A"} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
-          </View>
-
-          <View className="bg-white rounded-[70px] h-full px-7 pt-7">
-            <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Services' : 'خدمات'} </Text>
-            <View className="px-2 py-4 flex flex-row gap-6">
-              <TouchableOpacity className="flex flex-col gap-1 items-center" onPress={() => setToggleModalDeposit(true)}>
-                <View className="bg-purple-100 p-4 rounded-full">
-                  <Image source={deposit} alt='deposit' className="w-8 h-8" />
-                </View>
-                <Text className="text-lg font-semibold text-gray-900">{lang === 'eng' ? 'Deposit' : 'إيداع'}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity className="flex flex-col gap-1 items-center" onPress={() => setToggleModalWithdraw(true)}>
-                <View className="bg-blue-100 p-4 rounded-full">
-                  <Image source={withdraw} alt='deposit' className="w-8 h-8" />
-                </View>
-                <Text className="text-lg font-semibold text-gray-900">{lang === 'eng' ? 'Withdraw' : 'سحب'} </Text>
-              </TouchableOpacity>
-             
+ loading ?
+        <View className="h-screen bg-white flex items-center justify-center">
+          <Image source={require('../../../../assets/gif/loader.gif')} className="w-64" />
+        </View>
+        :
+        <ScrollView className="h-screen" showsVerticalScrollIndicator={false} onMomentumScrollEnd={(event) => {
+          const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+          const distanceFromBottom = contentSize.height - layoutMeasurement.height - contentOffset.y;
+          // Adjust the threshold as needed
+          if (distanceFromBottom < 50 && !isLoading) {
+            handleLoadMoreData();
+          }
+        }} >
+          <ImageBackground source={require('../../../../assets/images/gradienta.jpg')} className="bg-red-100 object-cover">
+            <View className="px-4 pt-14 flex flex-row justify-between">
+              <Text className="w-full text-meduim text-lg text-gray-900 capitalize">{lang === 'eng' ? 'Hello' : 'مرحبًا'}, <Text className="font-bold text-xl italic text-black">{userData?.username || 'unknown'}</Text></Text>
             </View>
-            <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Today' : 'اليوم'}</Text>
-
-            <View className="pb-4 pt-1 flex flex-col min-h-[31vh]">
-              {todayExpensesIncomes.length > 0 ?
-                <FlatList
-                  data={todayExpensesIncomes}
-                  renderItem={renderItem}
-                  keyExtractor={(_, index) => index.toString()}
-                  ListFooterComponent={renderFooter}
-                />
-                :
-                <View className="py-[8vh] flex items-center justify-center">
-                  <SimpleLineIcons name="doc" size={40} color="#d1d5db" />
-                  <Text className="mt-2 text-gray-400/80 font-light text-xl text-center">{lang === 'eng' ? 'There have been no transactions today.' : 'لم تحدث أي معاملات اليوم.'}</Text>
-                </View>
-              }
+            <View className="py-16 flex flex-col gap-3 items-center justify-center">
+              <Text className="text-xl font-bold text-gray-800">{lang === 'eng' ? 'Availiable balance' : 'الرصيد المتاح'}</Text>
+              <Text className="text-6xl font-black text-black text-center">{userData?.balance ? parseFloat(userData.balance).toFixed(2) : "N/A"} <Text className="uppercase">{userData?.currency || ''}</Text></Text>
             </View>
-          </View>
-        </ImageBackground>
 
-        {toggleModalDeposit && <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange} />}
-        {toggleModalWithdraw && <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange} />}
+            <View className="bg-white rounded-[70px] h-full px-7 pt-7">
+              <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Services' : 'خدمات'} </Text>
+              <View className="px-2 py-4 flex flex-row gap-6">
+                <TouchableOpacity className="flex flex-col gap-1 items-center" onPress={() => setToggleModalDeposit(true)}>
+                  <View className="bg-purple-100 p-4 rounded-full">
+                    <Image source={deposit} alt='deposit' className="w-8 h-8" />
+                  </View>
+                  <Text className="text-lg font-semibold text-gray-900">{lang === 'eng' ? 'Deposit' : 'إيداع'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity className="flex flex-col gap-1 items-center" onPress={() => setToggleModalWithdraw(true)}>
+                  <View className="bg-blue-100 p-4 rounded-full">
+                    <Image source={withdraw} alt='deposit' className="w-8 h-8" />
+                  </View>
+                  <Text className="text-lg font-semibold text-gray-900">{lang === 'eng' ? 'Withdraw' : 'سحب'} </Text>
+                </TouchableOpacity>
 
-      </ScrollView>
+              </View>
+              <Text className="text-2xl font-bold text-gray-900">{lang === 'eng' ? 'Today' : 'اليوم'}</Text>
+
+              <View className="pb-4 pt-1 flex flex-col min-h-[31vh]">
+                {todayExpensesIncomes.length > 0 ?
+                  <FlatList
+                    data={todayExpensesIncomes}
+                    renderItem={renderItem}
+                    keyExtractor={(_, index) => index.toString()}
+                    ListFooterComponent={renderFooter}
+                  />
+                  :
+                  <View className="py-[8vh] flex items-center justify-center">
+                    <SimpleLineIcons name="doc" size={40} color="#d1d5db" />
+                    <Text className="mt-2 text-gray-400/80 font-light text-xl text-center">{lang === 'eng' ? 'There have been no transactions today.' : 'لم تحدث أي معاملات اليوم.'}</Text>
+                  </View>
+                }
+              </View>
+            </View>
+          </ImageBackground>
+
+          {toggleModalDeposit && <Deposit toggleModalDeposit={toggleModalDeposit} setToggleModalDeposit={setToggleModalDeposit} setIschange={setIschange} />}
+          {toggleModalWithdraw && <Withdraw toggleModalWithdraw={toggleModalWithdraw} setToggleModalWithdraw={setToggleModalWithdraw} setIschange={setIschange} />}
+
+        </ScrollView>
   )
 }

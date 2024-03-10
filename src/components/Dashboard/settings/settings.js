@@ -1,11 +1,12 @@
 import React, { useCallback, useContext, useState } from 'react'
-import { Image, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Linking, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { myContext } from '../../../../App'
 import { Ionicons, FontAwesome, MaterialIcons, Entypo, AntDesign, Octicons } from '@expo/vector-icons';
 import { getUserData } from '../../../../database';
 import { useFocusEffect } from '@react-navigation/native';
 import EditModal from './components/editModal';
 import DeleteAccount from './components/deleteAccount';
+import ModalEmail from './components/modalEmail';
 
 export default function Settings({ navigation }) {
     const { lang } = useContext(myContext)
@@ -15,6 +16,7 @@ export default function Settings({ navigation }) {
     const [edit, setEdit] = useState({ key: "", value: "" })
     const [isChange, setIschange] = useState()
     const [toggleModalDelete, setToggleModalDelete] = useState(false)
+    const [toggleModalEmail,setToggleModalEmail] = useState(false)
 
     useFocusEffect(
         useCallback(() => {
@@ -30,7 +32,7 @@ export default function Settings({ navigation }) {
             if (supported) {
                 Linking.openURL(url);
             } else {
-                console.error("Don't know how to open URI: " + emailUrl);
+                setToggleModalEmail(true)
             }
         });
     };
@@ -42,7 +44,7 @@ export default function Settings({ navigation }) {
             </View>
             :
             <ScrollView className="h-screen bg-white px-5 py-6" >
-                <View className="flex flex-row justify-between pt-5">
+                <View className="flex flex-row justify-between pt-2">
                     <TouchableOpacity onPress={() => navigation.jumpTo('home')} className="py-2 px-2.5 border border-gray-400 rounded-lg flex items-center justify-center">
                         <Ionicons name="chevron-back" size={20} color="black" />
                     </TouchableOpacity>
@@ -50,7 +52,7 @@ export default function Settings({ navigation }) {
                 <View className="pt-7">
                     <Text className="text-black font-extrabold text-4xl">{lang === 'eng' ? 'Settings' : 'الإعدادات'}</Text>
 
-                    <View className="mt-9">
+                    <View className="mt-9 pb-10">
                         <Text className="text-black font-bold text-md text-gray-900">{lang === 'eng' ? 'General' : 'إعدادات عامة'}</Text>
                         <View className="mt-2 bg-slate-100 rounded-xl border border-slate-300">
                             <TouchableOpacity onPress={() => {
@@ -130,16 +132,16 @@ export default function Settings({ navigation }) {
                                 </Text>
                             </View>
                         </TouchableOpacity>
-                        <Text className=" mb-10 mt-4 text-center text-xs text-black/60 font-bold">
-                        👨🏻‍💻 {lang === 'eng' ? 'The application was developed by ' : 'تم تطوير التطبيق بواسطة '} 
-                            <Text onPress={()=>handlRedirect("https://hakimhizmi.netlify.app/")} className="underline font-extrabold text-black/90">Hakimhizmi.</Text>
+                        <Text className="mt-4 text-center text-xs text-black/60 font-bold">
+                            👨🏻‍💻 {lang === 'eng' ? 'The application was developed by ' : 'تم تطوير التطبيق بواسطة '}
+                            <Text onPress={() => handlRedirect("https://hakimhizmi.netlify.app/")} className="underline font-extrabold text-black/90">Hakimhizmi.</Text>
                         </Text>
-
                     </View>
                 </View>
 
                 {toggleModal && <EditModal toggleModal={toggleModal} setToggleModal={setToggleModal} edit={edit} setIschange={setIschange} />}
                 {toggleModalDelete && <DeleteAccount toggleModalDelete={toggleModalDelete} setToggleModalDelete={setToggleModalDelete} navigation={navigation} />}
+                {toggleModalEmail && <ModalEmail toggleModalEmail={toggleModalEmail} setToggleModalEmail={setToggleModalEmail} />}
             </ScrollView>
     )
 }
