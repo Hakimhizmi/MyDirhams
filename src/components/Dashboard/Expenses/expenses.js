@@ -5,7 +5,7 @@ import { Ionicons, Entypo } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { deleteExpensesOrIncomes, getExpensesOrIncomes } from '../../../../database';
 import { format, isValid } from 'date-fns';
-import { langContext } from '../../../../App'
+import { myContext } from '../../../../App'
 import { SimpleLineIcons } from '@expo/vector-icons';
 import Swipeable from 'react-native-swipeable';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -16,7 +16,7 @@ export default function Expenses({ navigation }) {
     const [toggleModalDelete, setToggleModalDelete] = useState(false)
     const [expences, setExpenses] = useState([])
     const [loading, setLoading] = useState(true)
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
     const [currency, setCurrency] = useState()
     const [filterbyDate, setDate] = useState(null);
     const [filterByCategorie, setSelectedCategorie] = useState(null)

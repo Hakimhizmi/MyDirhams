@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { Image, ScrollView, Text, TouchableHighlight, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native'
 import IncomeFilter from './components/incomeFilter'
 import { Ionicons, Entypo } from '@expo/vector-icons';
-import { langContext } from '../../../../App'
+import { myContext } from '../../../../App'
 import { useFocusEffect } from '@react-navigation/native';
 import { deleteExpensesOrIncomes, getExpensesOrIncomes } from '../../../../database';
 import { format, isValid } from 'date-fns';
@@ -19,7 +19,7 @@ export default function Incomes({ navigation }) {
     const [incomes, setIncomes] = useState([])
     const [currency, setCurrency] = useState()
     const [loading, setLoading] = useState(true)
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
     const [filterbyDate, setDate] = useState(null);
     const [filterByCategorie, setSelectedCategorie] = useState(null)
     const [page, setPage] = useState(1);

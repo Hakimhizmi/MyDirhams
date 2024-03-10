@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 import { SelectList } from 'react-native-dropdown-select-list';
 import { updateUserInfo } from '../../../../../database';
 
 export default function EditModal({ toggleModal, setToggleModal, edit, setIschange }) {
-    const { lang, toogleLanguage } = useContext(langContext)
+    const { lang, toogleLanguage } = useContext(myContext)
     const [loadingBtn, setloadingBtn] = useState()
     const [newValue, setNewValue] = useState(edit.value)
     const [error, setError] = useState(false)
@@ -16,6 +16,9 @@ export default function EditModal({ toggleModal, setToggleModal, edit, setIschan
             setError(lang === 'eng' ? 'Please enter a value to update.' : 'الرجاء إدخال قيمة للتحديث.');
             return;
         }
+        if (edit.key === 'balance' && (isNaN(parseFloat(newValue)) || !/^\d+(\.\d+)?$/.test(newValue.trim()))) {
+            return setError(lang === 'eng' ? 'Balance must be a valid number.' : 'يجب أن يكون الرصيد رقمًا صحيحًا.');
+        }        
         setloadingBtn(true)
         updateUserInfo(edit.key, newValue).then((success) => {
             setloadingBtn(false)

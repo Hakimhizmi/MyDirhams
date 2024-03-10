@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react'
 import { Image, Linking, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import { langContext } from '../../../../App'
+import { myContext } from '../../../../App'
 import { Ionicons, FontAwesome, MaterialIcons, Entypo, AntDesign, Octicons } from '@expo/vector-icons';
 import { getUserData } from '../../../../database';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,7 +8,7 @@ import EditModal from './components/editModal';
 import DeleteAccount from './components/deleteAccount';
 
 export default function Settings({ navigation }) {
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
     const [loading, setLoading] = useState(true)
     const [userData, setUserData] = useState({})
     const [toggleModal, setToggleModal] = useState(false)

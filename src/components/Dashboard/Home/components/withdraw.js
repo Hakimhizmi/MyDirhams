@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
 import { SelectList } from 'react-native-dropdown-select-list'
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 import { insertExpense } from '../../../../../database'
 
 
@@ -21,7 +21,7 @@ const data = [
 ]
 
 export default function Withdraw({ toggleModalWithdraw, setToggleModalWithdraw ,setIschange}) {
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
     const [title, setTitle] = useState()
     const [category, setCategory] = useState()
     const [amount, setAmount] = useState()
@@ -33,6 +33,9 @@ export default function Withdraw({ toggleModalWithdraw, setToggleModalWithdraw ,
             if (!title || !category || !amount || !title.trim() || !amount.trim()) {
                 return setError(lang === 'eng' ? 'All fields are required.' : 'جميع الحقول مطلوبة.');
             }
+            if (isNaN(parseFloat(amount)) || !/^\d+(\.\d+)?$/.test(amount.trim())) {
+                return setError(lang === 'eng' ? 'Amount must be a number.' : 'المبلغ يجب أن يكون رقمًا.');
+              }
             await insertExpense(title, category, amount);
             setError(""); setToggleModalWithdraw(false)
             setIschange(amount)

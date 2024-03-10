@@ -1,19 +1,19 @@
 import React, { useContext, useState } from 'react'
 import { NativeModules, Text, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 import { Feather } from '@expo/vector-icons';
 import { deleteAccount } from '../../../../../database'
 
 export default function DeleteAccount({ toggleModalDelete, setToggleModalDelete , navigation }) {
-    const { lang } = useContext(langContext)
+    const { lang , LeaveDashboard} = useContext(myContext)
     const [loadingBtn, setloadingBtn] = useState()
 
     const Delete_Account = async () => {
         setloadingBtn(true)
         deleteAccount().then(() => {
             setloadingBtn(false)
-            NativeModules.DevSettings.reload();
+            LeaveDashboard()
         }).catch((error) => console.log('Error fetching:', error))
     }
     return (

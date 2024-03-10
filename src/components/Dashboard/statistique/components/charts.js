@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useState } from 'react'
 import { Dimensions, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { BarChart, PieChart } from 'react-native-chart-kit'
 import { getStatistiqueData } from '../../../../../database';
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 import { AntDesign } from '@expo/vector-icons';
 
 const formatYLabel = (value) => {
@@ -31,7 +31,7 @@ const colors = [
 ];
 
 export default function Charts({ table }) {
-  const { lang } = useContext(langContext)
+  const { lang } = useContext(myContext)
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const [selectedYear, setselectedYear] = useState(currentYear)
@@ -74,7 +74,7 @@ export default function Charts({ table }) {
           <BarChart
             data={{
               labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-              datasets: [{ data: dataTotalAmountPerMonth.length ? dataTotalAmountPerMonth : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }]
+              datasets: [{ data: dataTotalAmountPerMonth }]
             }}
             width={Dimensions.get("window").width}
             height={300}

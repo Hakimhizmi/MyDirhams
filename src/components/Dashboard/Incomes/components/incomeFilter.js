@@ -1,12 +1,11 @@
-import React, { useContext, useState } from 'react'
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useContext } from 'react'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
 import DateTimePicker from 'react-native-ui-datepicker';
-import { langContext } from '../../../../../App'
-import { format } from 'date-fns';
+import { myContext } from '../../../../../App'
 
 export default function IncomeFilter({ toggleModalFilter, setToggleModalFilter, filterbyDate, setDate, filterByCategorie, setSelectedCategorie, applyFilter, loadingBtn }) {
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
 
 
     const IncomeCategories = ['Salary', 'Bonuses', 'Commissions', 'Dividends', 'Interest Income', 'Rental Income',

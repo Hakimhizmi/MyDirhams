@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { FontAwesome, Fontisto, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 export default function CustomTabBar({ state, navigation }) {

@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useState } from 'react'
-import { ActivityIndicator, FlatList, Image, ImageBackground, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import deposit from '../../../../assets/svg/deposit.png'
 import withdraw from '../../../../assets/svg/withdraw.png'
 import Deposit from './components/deposit'
 import Withdraw from './components/withdraw'
 import { getTodayData, getUserData } from '../../../../database'
-import { langContext } from '../../../../App'
+import { myContext } from '../../../../App'
 import { useFocusEffect } from '@react-navigation/native'
 import { format, isValid } from 'date-fns'
 import { SimpleLineIcons, Ionicons } from '@expo/vector-icons';
@@ -18,7 +18,7 @@ export default function Home() {
   const [userData, setUserData] = useState({})
   const [todayExpensesIncomes, setTodayData] = useState([])
   const [loading, setLoading] = useState(true)
-  const { lang } = useContext(langContext)
+  const { lang } = useContext(myContext)
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);

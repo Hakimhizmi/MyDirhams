@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
 import { insertIncome } from '../../../../../database';
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 
 const IncomeCategories = ['Salary', 'Bonuses', 'Commissions', 'Dividends', 'Interest Income', 'Rental Income',
   'Investment Income', 'Royalties', 'Pension or Retirement Income', 'Gifts and Inheritances', 'Others']
@@ -10,13 +10,16 @@ const IncomeCategories = ['Salary', 'Bonuses', 'Commissions', 'Dividends', 'Inte
 export default function Deposit({ toggleModalDeposit, setToggleModalDeposit,setIschange }) {
   const [source, setSource] = useState()
   const [amount, setAmount] = useState()
-  const { lang } = useContext(langContext)
+  const { lang } = useContext(myContext)
   const [error, setError] = useState(false)
 
   const deposit = async () => {
     try {
-      if (!amount || !source || !amount.trim()) {
+      if (!amount || !source || !amount.trim() ) {
         return setError(lang === 'eng' ? 'All fields are required.' : 'جميع الحقول مطلوبة.');
+      }
+      if (isNaN(parseFloat(amount)) || !/^\d+(\.\d+)?$/.test(amount.trim())) {
+        return setError(lang === 'eng' ? 'Amount must be a number.' : 'المبلغ يجب أن يكون رقمًا.');
       }
       await insertIncome(source, amount );
       setError(""); setToggleModalDeposit(false)

@@ -3,10 +3,10 @@ import { Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
 import { SelectList } from 'react-native-dropdown-select-list'
 import DateTimePicker from 'react-native-ui-datepicker';
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 
 export default function ExpenceFilter({ toggleModalFilter, setToggleModalFilter, filterbyDate, setDate, filterByCategorie, setSelectedCategorie, applyFilter, loadingBtn }) {
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
 
     const data = [
         { key: '2', value: 'Housing' },

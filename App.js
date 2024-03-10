@@ -8,8 +8,8 @@ import { Image, LogBox, View } from 'react-native';
 
 
 const Stack = createNativeStackNavigator();
-export const langContext = createContext()
-//LogBox.ignoreAllLogs();
+export const myContext = createContext()
+LogBox.ignoreAllLogs();
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -46,13 +46,17 @@ function App() {
   function redirectToDashboard() {
     setIsSignedIn(true);
   }
+
+  function LeaveDashboard() {
+    setIsSignedIn(false);
+  }
   return (
     loading ?
       <View className="h-screen bg-white flex items-center justify-center">
         <Image source={require('./assets/gif/loader.gif')} className="w-64" />
       </View>
       :
-      <langContext.Provider value={{ lang, toogleLanguage , redirectToDashboard }} >
+      <myContext.Provider value={{ lang, toogleLanguage , redirectToDashboard , LeaveDashboard }} >
         <NavigationContainer>
           <Stack.Navigator initialRouteName={isSignedIn ? 'dashboard' : 'setup'} screenOptions={{ headerShown: false }}>
             {isSignedIn ?
@@ -62,7 +66,7 @@ function App() {
             }
           </Stack.Navigator>
         </NavigationContainer>
-      </langContext.Provider>
+      </myContext.Provider>
   )
 }
 

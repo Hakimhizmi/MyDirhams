@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import { langContext } from '../../../../../App'
+import { myContext } from '../../../../../App'
 
 export default function CustomBar({ state, navigation }) {
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
 
     return (
         <View className="bg-white pt-5 flex flex-row items-center justify-center border-b border-gray-300" >

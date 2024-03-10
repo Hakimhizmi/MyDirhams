@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import Modal from "react-native-modal";
-import { langContext } from '../../../../App'
+import { myContext } from '../../../../App'
 import { Feather } from '@expo/vector-icons';
 
 export default function ModalDelete({ toggleModalDelete, setToggleModalDelete, Delete, loadingBtn }) {
-    const { lang } = useContext(langContext)
+    const { lang } = useContext(myContext)
 
     return (
         <Modal

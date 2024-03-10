@@ -406,12 +406,13 @@ export const updateUserInfo = (key, value) => {
 export const deleteAccount = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
-      tx.executeSql('DROP TABLE IF EXISTS expenses;', [], (_, success) => {
-        tx.executeSql('DROP TABLE IF EXISTS income;', [], (_, success) => {
-          tx.executeSql('DROP TABLE IF EXISTS users;', [], resolve, reject);
+      tx.executeSql('DELETE FROM expenses;', [], (_, success) => {
+        tx.executeSql('DELETE FROM income;', [], (_, success) => {
+          tx.executeSql('DELETE FROM users;', [], resolve, reject);
         });
       });
     });
   });
 };
+
 

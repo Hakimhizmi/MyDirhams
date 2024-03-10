@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import vectorFinance from '../../../assets/svg/vectorFinance.png'
-import { langContext } from '../../../App'
+import { myContext } from '../../../App'
 
 export default function Info({ navigation }) {
-  const { lang } = useContext(langContext)
+  const { lang } = useContext(myContext)
 
   return (
     <SafeAreaView className="h-screen flex justify-center relative">
@@ -15,7 +15,7 @@ export default function Info({ navigation }) {
             {lang === 'eng' ? ' A Simple expense tracker that makes managing expenses easy.' : 'متتبع مصاريف بسيط يجعل إدارة المصاريف سهلة.'}
           </Text>
         </View>
-        <View className="flex px-8 flex-row justify-between items-center absolute bottom-5 w-full">
+        <View className="flex px-8 flex-row justify-between items-center absolute bottom-8 w-full">
           <View className="flex flex-row gap-2">
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
             <View className="w-2.5 h-1.5 bg-gray-300 rounded-full"></View>
