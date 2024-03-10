@@ -25,11 +25,10 @@ export default function Settings({ navigation }) {
         }, [isChange])
     );
 
-    const handleEmailRedirect = () => {
-        const emailUrl = `mailto:hizmi.abdelhakim@gmail.com`;
-        Linking.canOpenURL(emailUrl).then((supported) => {
+    const handlRedirect = (url) => {
+        Linking.canOpenURL(url).then((supported) => {
             if (supported) {
-                Linking.openURL(emailUrl);
+                Linking.openURL(url);
             } else {
                 console.error("Don't know how to open URI: " + emailUrl);
             }
@@ -114,14 +113,14 @@ export default function Settings({ navigation }) {
                         </View>
 
 
-                        <TouchableOpacity onPress={()=>handleEmailRedirect()} className="mt-14 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity onPress={() => handlRedirect("mailto:hizmi.abdelhakim@gmail.com")} className="mt-14 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <AntDesign name="like2" size={24} color="#334155" />
                             <View className="">
                                 <Text className="text-lg font-extrabold">{lang === 'eng' ? 'Leave feedback' : 'ترك ردود الفعل'}</Text>
                                 <Text className="text-md w-[32vh] font-meduim">{lang === 'eng' ? 'Let us know what you think of the app.' : 'أخبرنا برأيك في التطبيق.'}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setToggleModalDelete(true)} className="mt-4 mb-8 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity onPress={() => setToggleModalDelete(true)} className="mt-4 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <Octicons name="repo-deleted" size={24} color="red" />
                             <View className="">
                                 <Text className="text-lg font-extrabold text-red-600">{lang === 'eng' ? 'Delete account' : 'حذف الحساب'}</Text>
@@ -131,6 +130,11 @@ export default function Settings({ navigation }) {
                                 </Text>
                             </View>
                         </TouchableOpacity>
+                        <Text className=" mb-10 mt-4 text-center text-xs text-black/60 font-bold">
+                        👨🏻‍💻 {lang === 'eng' ? 'The application was developed by ' : 'تم تطوير التطبيق بواسطة '} 
+                            <Text onPress={()=>handlRedirect("https://hakimhizmi.netlify.app/")} className="underline font-extrabold text-black/90">Hakimhizmi.</Text>
+                        </Text>
+
                     </View>
                 </View>
 
