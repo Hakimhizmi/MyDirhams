@@ -22,7 +22,7 @@ export default function EditModal({ toggleModal, setToggleModal, edit, setIschan
             edit.key === 'lang' && toogleLanguage()
             setIschange(success)
             setToggleModal(false)
-        }).catch((error) => setError('Error fetching:', error))
+        }).catch((error) => setError('something went wrong!!'))
     }
 
     return (

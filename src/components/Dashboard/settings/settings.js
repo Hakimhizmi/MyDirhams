@@ -5,6 +5,7 @@ import { Ionicons, FontAwesome, MaterialIcons, Entypo, AntDesign, Octicons } fro
 import { getUserData } from '../../../../database';
 import { useFocusEffect } from '@react-navigation/native';
 import EditModal from './components/editModal';
+import DeleteAccount from './components/deleteAccount';
 
 export default function Settings({ navigation }) {
     const { lang } = useContext(langContext)
@@ -12,7 +13,8 @@ export default function Settings({ navigation }) {
     const [userData, setUserData] = useState({})
     const [toggleModal, setToggleModal] = useState(false)
     const [edit, setEdit] = useState({ key: "", value: "" })
-    const [isChange,setIschange] = useState()
+    const [isChange, setIschange] = useState()
+    const [toggleModalDelete, setToggleModalDelete] = useState(false)
 
     useFocusEffect(
         useCallback(() => {
@@ -108,7 +110,7 @@ export default function Settings({ navigation }) {
                                 <Text className="text-md font-meduim">{lang === 'eng' ? 'Let us know what you think of the app.' : 'أخبرنا برأيك في التطبيق.'}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity className="mt-4 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
+                        <TouchableOpacity onPress={() => setToggleModalDelete(true)} className="mt-4 bg-slate-100 rounded-xl border border-slate-300 py-3 px-4 flex flex-row space-x-4 items-center">
                             <Octicons name="repo-deleted" size={24} color="red" />
                             <View className="">
                                 <Text className="text-lg font-extrabold text-red-600">{lang === 'eng' ? 'Delete account' : 'حذف الحساب'}</Text>
@@ -121,7 +123,8 @@ export default function Settings({ navigation }) {
                     </View>
                 </View>
 
-                {toggleModal && <EditModal toggleModal={toggleModal} setToggleModal={setToggleModal} edit={edit} setIschange={setIschange}/>}
+                {toggleModal && <EditModal toggleModal={toggleModal} setToggleModal={setToggleModal} edit={edit} setIschange={setIschange} />}
+                {toggleModalDelete && <DeleteAccount toggleModalDelete={toggleModalDelete} setToggleModalDelete={setToggleModalDelete} navigation={navigation} />}
             </ScrollView>
     )
 }
