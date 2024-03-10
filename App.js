@@ -48,7 +48,7 @@ function App() {
   }
   return (
     loading ?
-      <View className="h-screen flex items-center justify-center">
+      <View className="h-screen bg-white flex items-center justify-center">
         <Image source={require('./assets/gif/loader.gif')} className="w-64" />
       </View>
       :

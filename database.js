@@ -59,15 +59,18 @@ export const checkIfDatabaseExists = () => {
           [],
           (_, { rows }) => {
             const tableExists = rows.length > 0;
-
             if (tableExists) {
               // 'users' table exists, check if it has data
               tx.executeSql(
                 'SELECT * FROM users',
                 [],
                 (_, { rows }) => {
-                  const lang = rows.item(0).lang;
-                  resolve(lang ? lang : false);
+                  if (rows.length > 0) {
+                    const lang = rows.item(0);
+                    resolve(lang.lang);
+                  } else {
+                    resolve(false); // 'users' table exists, but no data
+                  }
                 },
                 (_, error) => reject(error)
               );
@@ -82,6 +85,7 @@ export const checkIfDatabaseExists = () => {
     );
   });
 };
+
 
 export const insertUser = (username, balance, currency, lang) => {
   return new Promise((resolve, reject) => {

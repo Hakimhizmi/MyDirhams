@@ -74,7 +74,7 @@ export default function Charts({table}) {
           <BarChart
             data={{
               labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-              datasets: [{ data: dataTotalAmountPerMonth }]
+              datasets: [{ data: dataTotalAmountPerMonth.length ? dataTotalAmountPerMonth : [0,0,0,0,0,0,0,0,0,0,0,0] }]
             }}
             width={Dimensions.get("window").width}
             height={300}
